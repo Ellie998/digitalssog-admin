@@ -33,6 +33,9 @@ const TemplateIdPage = async ({
       <h1 className="text-xl text-center">
         <b>{params.templateId}</b> 템플릿의 Edit Page
       </h1>
+      <div className="ml-auto">
+        created_at : {templateData.created_date}, updated_at : {templateData.updated_date}
+      </div>
       <div className="grid grid-cols-2 gap-x-20 gap-y-32">
         <TemplateAppNameForm appName={templateData?.appName || ''} id={params.templateId} />
         <TemplateVersionForm version={templateData?.version || ''} id={params.templateId} />
