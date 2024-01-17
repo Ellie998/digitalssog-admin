@@ -1,0 +1,90 @@
+.layout {
+  display: grid;
+  grid-template-rows: repeat(7, 39px);
+  text-align: center;
+}
+/* ---------------- HEADER NAV --------------------- */
+.headerNav i {
+  margin-right: 4px;
+}
+.headerNav {
+  grid-row: 1/2;
+  text-align: end;
+  display: flex;
+  justify-content: center;
+  justify-content: flex-end;
+  align-items: center;
+}
+.headerNav > div:first-child {
+  position: relative;
+  z-index: 100;
+  margin-right: 22px;
+  font-size: 0.7rem;
+}
+
+/* ---------------- PHONE NUMBER --------------------- */
+.phoneNum {
+  grid-row: 2/3;
+}
+/* ---------------- MAIN --------------------- */
+.main_center {
+  grid-row: 4/5;
+  font-size: 3rem;
+}
+
+/* ---------------- HEAMAIN SUB OPTION --------------------- */
+.main_subOptionLayout {
+  grid-row: 6/7;
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  align-items: center;
+}
+.main_subOption {
+  background-color: rgba(196, 196, 196, 0.428);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1px;
+}
+.main_subOption:nth-child(1),
+.main_subOption:nth-child(3) {
+  border-radius: 100%;
+}
+.main_subOption:nth-child(2) {
+  border-radius: 8px;
+  padding: 1px 8px;
+}
+/* ---------------- MAIN OPTION --------------------- */
+.main_optionBox {
+  grid-row: 7/8;
+  display: grid;
+  grid-template-columns: repeat(5, 30px);
+  column-gap: 2px;
+  background-color: rgba(196, 196, 196, 0.428);
+  border-radius: 10px;
+  margin: 0 5px 0 5px;
+}
+.main_optionBox > div > p {
+  font-size: 0.5rem;
+}
+.main_optionIcon--selected i,
+.main_optionIcon--selected p {
+  color: rgb(0, 190, 114);
+  font-weight: 900;
+}
+.main_optionIcon--redBack {
+  background-color: red;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 30px;
+  margin: 0 auto;
+}
+.main_optionIcon--redBack i {
+  color: white;
+  font-weight: bolder;
+  font-size: 1rem;
+}

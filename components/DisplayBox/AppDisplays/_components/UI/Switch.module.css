@@ -1,0 +1,37 @@
+/* ---------------------BUTTON---------------------------- */
+
+.toggleInput[type="checkbox"] {
+  height: 0;
+  width: 0;
+  visibility: hidden;
+}
+
+.toggleLabel {
+  cursor: pointer;
+  width: 30px;
+  height: 15px;
+  background: rgb(212, 212, 212);
+  display: block;
+  border-radius: 100px;
+  position: relative;
+}
+
+.toggleLabel:after {
+  content: "";
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  background: #fff;
+  border-radius: 90px;
+  transition: 0.3s;
+  box-shadow: 0 0 2px rgba(27, 27, 27, 0.435);
+}
+
+.toggleInput:checked + .toggleLabel {
+  animation: opacity0to100 0.5s;
+  /* background: #fff200; */
+}
+
+.toggleInput:checked + .toggleLabel:after {
+  transform: translateX(100%);
+}

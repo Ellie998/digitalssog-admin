@@ -1,0 +1,48 @@
+<!-- <?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+<channel>
+<title>피드 제목</title>
+<link>http://www.yourwebsite.com/</link>
+<description>피드 설명이 들어갈 부분
+1-2문장으로 작성한다. </description>
+<item>
+<title>콘텐츠 제목</title>
+<link>콘텐츠 다이렉트 URL </link>
+<guid>콘텐츠만의 유일한 ID. 다시 URL을 복사한다.</guid>
+<pubDate>Wed, 27 Nov 2013 15:17:32 GMT 
+(알아두기: 날짜형식은 꼭 이 형식이어야 한다. )</pubDate>
+<description>콘텐츠 설명</description>
+</item>
+
+<!-- 
+
+  <?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0">
+<channel>
+<title>My Cool Blog</title>
+<link>http://www.yourwebsite.com/</link>
+<description>My latest cool articles</description>
+<item>
+<title>Article 3</title>
+<link>example.com/3</link>
+<guid>example.com/3</guid>
+<pubDate>Wed, 27 Nov 2013 13:20:00 GMT</pubDate>
+<description>My newest article.</description>
+</item>
+<item>
+<title>Article 2</title>
+<link>example.com/2</link>
+<guid>example.com/2</guid>
+<pubDate>Tue, 26 Nov 2013 12:15:12 GMT</pubDate>
+<description>My second article.</description>
+</item>
+<item>
+<title>Article 1</title>
+<link>example.com/1</link>
+<guid> example.com/1</guid>
+<pubDate>Mon, 25 Nov 2013 15:10:45 GMT</pubDate>
+<description>My first article.</description>
+</item>
+</channel>
+</rss>
+ --> -->

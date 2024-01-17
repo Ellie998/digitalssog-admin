@@ -1,0 +1,88 @@
+/* ---------------------GROUP PROFILE---------------------------- */
+.groupProfileWrap {
+  width: 100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: auto;
+  padding: 20px;
+}
+.groupProfileSettingBtn {
+  text-align: center;
+  background-color: #4d4d4d;
+  border-radius: 18px;
+  height: 15px;
+  width: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  grid-column: 3/4;
+  grid-row: 2/3;
+  position: relative;
+  left: -6px;
+  top: 5px;
+}
+.groupProfileSettingBtn > i {
+  color: white;
+  font-size: 0.4rem;
+}
+
+/* ---------------------COMMON---------------------------- */
+
+.iconWrap_background--skyBlue {
+  text-align: center;
+  font-size: 0.8rem;
+  background-color: #92e7ff8a;
+  border-radius: 18px;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  grid-column: 1/3;
+  grid-row: 1/2;
+}
+.iconWrap_background--purple {
+  text-align: center;
+  font-size: 0.8rem;
+  background-color: #929dff8a;
+  border-radius: 18px;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  grid-column: 1/2;
+  grid-row: 2/3;
+}
+.iconWrap_background--blue {
+  text-align: center;
+  font-size: 0.8rem;
+  background-color: #92caff8a;
+  border-radius: 18px;
+  height: 20px;
+  width: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  grid-column: 2/3;
+  grid-row: 2/3;
+}
+.iconWrap_background--skyBlue i,
+.iconWrap_background--blue i,
+.iconWrap_background--purple i {
+  color: #ededed;
+}
+
+/* -----------------ANIMATION----------------- */
+@keyframes opacity0to100 {
+  0% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

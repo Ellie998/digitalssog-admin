@@ -1,0 +1,123 @@
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  relationMode = "prisma"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+
+
+model App {
+  id String @id @default(uuid())
+  name String  @unique
+  icon String? 
+  version String? 
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  functions AppsOnFunctions[]
+  methods Method[]
+}
+
+model Function {
+  id String @id @default(uuid())
+  title String  @unique
+  description String? @db.Text
+  icon String?
+  
+  apps AppsOnFunctions[]
+
+  categoryName String?
+  category Function_category? @relation(fields: [categoryName],references: [name],onDelete: Cascade)
+
+  
+  methods Method[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([categoryName])
+
+}
+
+model AppsOnFunctions {
+  appName String
+  app App @relation(fields: [appName],references: [name])
+
+  functionName String
+  function Function @relation(fields: [functionName],references: [title])
+
+
+  @@id([appName,functionName ])
+  @@index([appName])
+  @@index([functionName])
+}
+
+model Method {
+  id String @id @default(uuid())
+  description String?
+  order Int?
+
+  functionName String?
+  function Function? @relation(fields: [functionName],references: [title])
+  
+  appName String?
+  app App? @relation(fields: [appName],references: [name])
+
+  guides Guide[]
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+    
+  @@index([functionName])
+  @@index([appName])
+
+}
+
+model Guide {
+  id String @id @default(uuid())
+  description String 
+  order Int?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  methodId String?
+  method Method? @relation(fields: [methodId],references: [id])
+
+  guide_component Guide_component?  
+  
+  @@index([methodId])
+}
+
+model Guide_component {
+  id String @id @default(uuid())
+  code String? @db.Text
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  guideId String? @unique
+  guide Guide? @relation(fields: [guideId],references: [id])
+
+  @@index([guideId])
+}
+
+
+
+model Function_category {
+  id String @id @default(uuid()) 
+  name String @unique
+  icon String?
+
+  functions Function[]
+}
+
+
+
+

@@ -1,0 +1,251 @@
+.layout {
+  overflow: hidden;
+  height: 305px;
+}
+
+/* ---------------------HEADER---------------------------- */
+.main_header {
+  background-color: rgb(178, 198, 218);
+  padding-top: 10px;
+  height: 35px;
+}
+
+/* ---------------------MESSAGE---------------------------- */
+.messages {
+  background-color: rgb(178, 198, 217);
+  padding: 4px;
+  height: 240px;
+}
+
+.messagesSmall {
+  height: 120px;
+}
+
+/* ---------------------OPTION INFO---------------------------- */
+.optionInfoWrap {
+  border-top: 1px solid rgb(226, 226, 226);
+  width: 160px;
+  display: flex;
+  align-items: center;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.optionInfoWrap::-webkit-scrollbar {
+  display: none;
+}
+.optionImgWrap {
+  display: flex;
+}
+
+.imgBox {
+  background-color: antiquewhite;
+  width: 38px;
+  height: 38px;
+  position: relative;
+  text-align: center;
+  border-radius: 6px;
+}
+
+.deleteBtn {
+  position: relative;
+  top: 0px;
+  right: 10px;
+  align-self: normal;
+  z-index: 100;
+  cursor: pointer;
+}
+.deleteBtn i {
+  color: red;
+  background-color: white;
+  border-radius: 100%;
+}
+/* --------------------- NAV---------------------------- */
+.appNav {
+  padding: 0 3px;
+  height: 30px;
+  display: grid;
+  grid-template-columns: auto auto 15%;
+  align-items: center;
+  background-color: white;
+}
+.appNavSmall {
+  animation: fadeInUp 0.2s;
+}
+
+.subTitle {
+  font-size: 0.5rem;
+  padding: 5px 0;
+  margin-left: 5px;
+  text-align: start;
+  color: var(--grey-400);
+  line-height: 140%;
+}
+
+/* --------------------- OPTIONS ---------------------------- */
+.options {
+  background-color: white;
+  box-shadow: 0 8px 8px rgba(184, 184, 184, 0.473);
+  border-radius: 12px;
+  font-size: 0.8rem;
+  max-width: max-content;
+  padding: 5px 10px;
+  position: relative;
+  top: -80px;
+  left: 60px;
+  z-index: 500;
+}
+
+.options div {
+  margin-bottom: 10px;
+}
+
+/* --------------------- OPTION BOX ---------------------------- */
+.optionBox {
+  padding: 10px;
+  height: 100px;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  animation: fadeInUp 0.2s;
+  background-color: rgba(239, 239, 239, 0.247);
+}
+
+.optionBox::-webkit-scrollbar,
+.optionBox_background--grey::-webkit-scrollbar {
+  display: none;
+}
+
+.optionRow {
+  display: grid;
+  grid-template-columns: repeat(4, 38px);
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.optionRow div {
+  font-size: 0.6rem;
+  margin: 0 auto;
+}
+
+.iconWrap {
+  border-radius: 100%;
+  max-width: fit-content;
+  max-height: fit-content;
+  padding: 4px 4px;
+}
+.iconWrap > i {
+  color: white;
+  font-size: 0.7rem;
+}
+
+/* ------------------SIDE MENU-------------------- */
+.sideMenuWrap {
+  position: relative;
+  z-index: 100;
+  top: -305px;
+  height: 305px;
+  display: flex;
+}
+.backdrop {
+  background-color: rgba(6, 6, 6, 0.235);
+  width: 50px;
+  height: 305px;
+  animation: opacity0to100 0.5s;
+}
+.sideMenuBox {
+  background-color: white;
+  height: 305px;
+  width: 125px;
+  animation: rightLeft 0.5s;
+  overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.sideMenuBox::-webkit-scrollbar {
+  display: none;
+}
+.sideMenuNavWrap {
+  padding: 3px;
+  background-color: rgb(239, 239, 239);
+  position: absolute;
+  bottom: 0px;
+  width: 125px;
+}
+
+/* ---------------------MODAL---------------------------- */
+.modalWrap {
+  position: relative;
+  top: -610px;
+  animation: opacity0to100Pure 0.5s;
+  z-index: 200;
+  height: 305px;
+}
+.backdrop_modal {
+  background-color: #2a2a2a6a;
+  width: 174px;
+  height: 305px;
+  z-index: 200;
+}
+.modal {
+  position: absolute;
+  background-color: white;
+  width: 150px;
+  height: max-content;
+  padding: 10px;
+  z-index: 300;
+  border-radius: 4px;
+  top: 80px;
+  left: 10px;
+}
+.modalNavWrap {
+  display: flex;
+  justify-content: flex-end;
+}
+.modalRadioWrap {
+  display: flex;
+  cursor: pointer;
+  width: 100px;
+}
+
+/* ------------------ANIMAITION-------------------- */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0.7;
+    transform: translate3d(0, 100%, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translateZ(0);
+  }
+}
+@keyframes rightLeft {
+  0% {
+    transform: translate3d(100%, 0, 0);
+  }
+  to {
+    transform: translateZ(0);
+  }
+}
+@keyframes opacity0to100 {
+  0% {
+    opacity: 0;
+    transform: scaleX(7);
+  }
+  to {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+}
+@keyframes opacity0to100Pure {
+  0% {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
