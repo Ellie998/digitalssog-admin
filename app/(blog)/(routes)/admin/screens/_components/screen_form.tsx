@@ -1,6 +1,6 @@
 import ScreenTable from './screen-table';
 
-const ScreenForm = async () => {
+const ScreenForm = async ({ id }: { id?: string }) => {
   const screenData: Array<{
     id: string;
     name: string;
@@ -10,7 +10,7 @@ const ScreenForm = async () => {
     updated_date: string;
   }> = [
     {
-      id: 'dks-23123-dasmlfsm',
+      id: id ? id : 'dks-23123-dasmlfsm',
       name: '스크린1',
       appName: '기본',
       version: '0.1.2',
