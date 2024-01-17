@@ -18,16 +18,16 @@ import { toast } from 'react-toastify';
 import { useState } from 'react';
 
 const formSchema = z.object({
-  version: z.string().min(1),
+  name: z.string().min(1),
 });
 
-const TemplateVersionForm = ({ version, id }: { version: string; id: string }) => {
+const ScreenNameForm = ({ name, id }: { name: string; id: string }) => {
   const [isSubmited, setIsSubmited] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      version: version,
+      name: name,
     },
   });
 
@@ -38,14 +38,14 @@ const TemplateVersionForm = ({ version, id }: { version: string; id: string }) =
       //   method: 'PATCH',
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify({
-      //     version: values.version,
+      //     name: values.name,
       //   }),
       // });
       // if (!response.ok) {
       //   toast.error('Fail');
       //   throw Error('');
       // }
-      toast.success(`[${id}] version : ${values.version} 수정 성공!`);
+      toast.success(`[${id}] name 수정 성공!` + ' ' + values.name);
     } catch (error) {
       console.log(error);
     } finally {
@@ -53,17 +53,17 @@ const TemplateVersionForm = ({ version, id }: { version: string; id: string }) =
     }
   }
   return (
-    <div className="w-full p-6 shadow-md">
+    <div className="w-full p-6 ">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="version"
+            name="name"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-lg">version</FormLabel>
+                <FormLabel className="text-lg">스크린 이름</FormLabel>
                 <FormControl>
-                  <Input placeholder="shadcn" {...field} />
+                  <Input placeholder="ex) 스크린1" {...field} />
                 </FormControl>
 
                 <FormMessage />
@@ -79,4 +79,4 @@ const TemplateVersionForm = ({ version, id }: { version: string; id: string }) =
   );
 };
 
-export default TemplateVersionForm;
+export default ScreenNameForm;

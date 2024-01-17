@@ -7,13 +7,14 @@ import DetailTheme from './(category-details)/detail-theme';
 import DetailBg from './(category-details)/detail-bg';
 // import DetailText from './(category-details)/detail-text';
 import DetailElement from './(category-details)/detail-element';
+import DetailTemplate from './(category-details)/detail-template';
 
 const CanvasCategoryDetail = () => {
   const canvasCategory = useRecoilValue(canvasCategoryState);
 
   switch (canvasCategory) {
     case '템플릿':
-      return <div></div>;
+      return <DetailTemplate />;
       break;
     case '요소':
       return <DetailElement />;

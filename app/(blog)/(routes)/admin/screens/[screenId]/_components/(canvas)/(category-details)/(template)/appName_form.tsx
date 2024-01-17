@@ -18,16 +18,16 @@ import { toast } from 'react-toastify';
 import { useState } from 'react';
 
 const formSchema = z.object({
-  name: z.string().min(1),
+  appName: z.string().min(1),
 });
 
-const TemplateNameForm = ({ name, id }: { name: string; id: string }) => {
+const ScreenAppNameForm = ({ appName, id }: { appName: string; id: string }) => {
   const [isSubmited, setIsSubmited] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: name,
+      appName: appName,
     },
   });
 
@@ -38,14 +38,14 @@ const TemplateNameForm = ({ name, id }: { name: string; id: string }) => {
       //   method: 'PATCH',
       //   headers: { 'Content-Type': 'application/json' },
       //   body: JSON.stringify({
-      //     name: values.name,
+      //     appName: values.appName,
       //   }),
       // });
       // if (!response.ok) {
       //   toast.error('Fail');
       //   throw Error('');
       // }
-      toast.success(`[${id}] name 수정 성공!` + ' ' + values.name);
+      toast.success(`[${id}] AppName 수정 성공!` + ' ' + values.appName);
     } catch (error) {
       console.log(error);
     } finally {
@@ -53,17 +53,17 @@ const TemplateNameForm = ({ name, id }: { name: string; id: string }) => {
     }
   }
   return (
-    <div className="w-full p-6 shadow-md">
+    <div className="w-full p-6 ">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="name"
+            name="appName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-lg">name</FormLabel>
+                <FormLabel className="text-lg">AppName</FormLabel>
                 <FormControl>
-                  <Input placeholder="ex) 스크린1" {...field} />
+                  <Input placeholder="ex) 카카오톡" {...field} />
                 </FormControl>
 
                 <FormMessage />
@@ -79,4 +79,4 @@ const TemplateNameForm = ({ name, id }: { name: string; id: string }) => {
   );
 };
 
-export default TemplateNameForm;
+export default ScreenAppNameForm;

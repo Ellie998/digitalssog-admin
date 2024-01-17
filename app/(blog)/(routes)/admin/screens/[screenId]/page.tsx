@@ -1,6 +1,4 @@
-import TemplateAppNameForm from './_components/appName_form';
-import TemplateNameForm from './_components/name_form';
-import TemplateVersionForm from './_components/version_form';
+import ScreenRecoilRoot from './_components/screen-recoil-root';
 
 const ScreenIdPage = async ({
   params,
@@ -14,6 +12,9 @@ const ScreenIdPage = async ({
     name: string;
     appName: string;
     version: string;
+    main_color: string;
+    sub_color: string;
+    templateId: string;
     created_date: string;
     updated_date: string;
   } = {
@@ -21,6 +22,9 @@ const ScreenIdPage = async ({
     name: '스크린1',
     appName: '기본',
     version: '0.1.2',
+    main_color: '#f18282',
+    sub_color: '#ffffff',
+    templateId: 'djodwj9-dsajdk-dadlj',
     created_date: '2023.01.23',
     updated_date: '2023.10.23',
   };
@@ -33,11 +37,8 @@ const ScreenIdPage = async ({
       <div className=" ml-auto">
         created_at : {screenData.created_date}, updated_at : {screenData.updated_date}
       </div>
-      <div className="grid grid-cols-2 gap-x-20 gap-y-32">
-        <TemplateNameForm name={screenData?.name || ''} id={params.screenId} />
-        <TemplateAppNameForm appName={screenData?.appName || ''} id={params.screenId} />
-        <TemplateVersionForm version={screenData?.version || ''} id={params.screenId} />
-      </div>
+
+      <ScreenRecoilRoot data={screenData} />
     </div>
   );
 };

@@ -70,6 +70,9 @@ export default function ScreenTable({
     name: string;
     appName: string;
     version: string;
+    main_color: string;
+    sub_color: string;
+    templateId: string;
     created_date: string;
     updated_date: string;
   }[];
