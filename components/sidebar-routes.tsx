@@ -10,6 +10,7 @@ const SidebarRoutes = () => {
         <>
           <Link href={'/admin'}>admin 메인</Link>
           <Link href={'/admin/functions'}>function 메인</Link>
+          <Link href={'/admin/templates'}>template 메인</Link>
         </>
       ) : (
         <>

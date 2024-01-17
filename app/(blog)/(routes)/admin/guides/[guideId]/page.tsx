@@ -1,9 +1,9 @@
-import { db } from "@/lib/db";
-import GuideDescriptionForm from "./_components/guide-description-form";
-import GuideOrderForm from "./_components/guide-order-form";
-import GuideComponentButton from "./_components/guide-components-button";
+import { db } from '@/lib/db';
+import GuideDescriptionForm from './_components/guide-description-form';
+import GuideOrderForm from './_components/guide-order-form';
+import GuideComponentButton from './_components/guide-components-button';
 
-import DisplayRecoilRoot from "./_components/display-recoil-root";
+import DisplayRecoilRoot from './_components/display-recoil-root';
 
 const GuideEditPage = async ({
   params,
@@ -31,17 +31,12 @@ const GuideEditPage = async ({
         />
       </div>
       <div className="grid grid-cols-2 gap-x-20 gap-y-32">
-        <GuideDescriptionForm
-          id={params.guideId}
-          description={guide?.description || ""}
-        />
+        <GuideDescriptionForm id={params.guideId} description={guide?.description || ''} />
         <GuideOrderForm id={params.guideId} order={guide?.order || null} />
       </div>
       {/* guide component */}
 
-      <DisplayRecoilRoot
-        guide_component_id={guide?.guide_component?.id || null}
-      />
+      <DisplayRecoilRoot />
     </div>
   );
 };

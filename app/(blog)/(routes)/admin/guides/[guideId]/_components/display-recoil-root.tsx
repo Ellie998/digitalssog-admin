@@ -11,10 +11,9 @@ import CanvasPreview from './canvas-preview';
 import CanvasCategories from './(canvas)/canvas-categories';
 import CanvasCategoryDetail from './(canvas)/canvas-category-detail';
 
-const DisplayRecoilRoot = ({ guide_component_id }: { guide_component_id: string | null }) => {
+const DisplayRecoilRoot = () => {
   return (
     <RecoilRoot>
-      {/* <ComponentSection guide_component_id={guide_component_id} /> */}
       <ResizablePanelGroup direction="horizontal" className="min-h-[500px] border ">
         <ResizablePanel className="flex ">
           <>

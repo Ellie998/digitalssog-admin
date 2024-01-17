@@ -13,7 +13,7 @@ const CanvasCategoryDetail = () => {
 
   switch (canvasCategory) {
     case '템플릿':
-      return <></>;
+      return <div></div>;
       break;
     case '요소':
       return <DetailElement />;
