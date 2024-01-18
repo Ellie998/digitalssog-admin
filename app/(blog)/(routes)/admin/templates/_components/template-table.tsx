@@ -20,11 +20,13 @@ import {
   GridRowModel,
   GridRowEditStopReasons,
 } from '@mui/x-data-grid';
-import { randomId } from '@mui/x-data-grid-generator';
+
 import { Button } from '@/components/ui/button';
 import { toast } from 'react-toastify';
 import { BsArrowsAngleExpand, BsCopy } from 'react-icons/bs';
 import Link from 'next/link';
+import { Template } from '@prisma/client';
+import { v4 } from 'uuid';
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -35,15 +37,17 @@ function EditToolbar(props: EditToolbarProps) {
   const { setRows, setRowModesModel } = props;
 
   const handleClick = () => {
-    const id = randomId();
+    const id = v4();
     setRows((oldRows) => [
       ...oldRows,
       {
         id: id,
         appName: '',
         version: '',
-        created_date: '',
-        updated_date: '',
+        phoneName: '',
+        created_at: '',
+        updated_at: '',
+        isNew: true,
       },
     ]);
     setRowModesModel((oldModel) => ({
@@ -61,23 +65,14 @@ function EditToolbar(props: EditToolbarProps) {
   );
 }
 
-export default function TemplateTable({
-  data,
-}: {
-  data: {
-    id: string;
-    appName: string;
-    version: string;
-    created_date: string;
-    updated_date: string;
-  }[];
-}) {
+export default function TemplateTable({ data }: { data: Template[] }) {
   const initialRows: GridRowsProp = data?.map((data) => ({
     id: data.id,
     appName: data.appName,
     version: data.version,
-    created_date: data.created_date,
-    updated_date: data.updated_date,
+    phoneName: data.phoneName,
+    created_at: data.created_at,
+    updated_at: data.updated_at,
   }));
 
   const [rows, setRows] = React.useState(initialRows);
@@ -104,23 +99,23 @@ export default function TemplateTable({
 
       toast.success(`[${id}] template 삭제 성공`);
 
-      // try {
-      //   const response = await fetch(`/api/templates/${id}`, {
-      //     method: 'DELETE',
-      //     headers: { 'Content-Type': 'application/json' },
-      //     body: JSON.stringify({
-      //       id: id,
-      //     }),
-      //   });
-      //   if (!response.ok) {
-      //     toast.error('ERROR!');
-      //     throw Error('FAIL : TEMPLATE TABLE');
-      //   }
+      try {
+        const response = await fetch(`/api/templates/${id}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: id,
+          }),
+        });
+        if (!response.ok) {
+          toast.error('ERROR!');
+          throw Error('FAIL : TEMPLATE TABLE');
+        }
 
-      //   toast.success(`[${id}] template 삭제 성공`);
-      // } catch (error) {
-      //   console.log(error);
-      // }
+        toast.success(`[${id}] template 삭제 성공`);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -142,35 +137,37 @@ export default function TemplateTable({
 
     try {
       if (newRow.isNew) {
-        // const response = await fetch(`/api/templates`, {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify({
-        //     id: newRow.id,
-        //     appName: newRow?.appName,
-        //     version: newRow?.version,
-        //   }),
-        // });
-        // if (!response.ok) {
-        //   toast.error('ERROR!');
-        //   throw Error('FAIL : TEMPLATE TABLE');
-        // }
+        const response = await fetch(`/api/templates`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: newRow.id,
+            appName: newRow.appName,
+            version: newRow.version,
+            phoneName: newRow.phoneName,
+          }),
+        });
+        if (!response.ok) {
+          toast.error('ERROR!');
+          throw Error('FAIL : TEMPLATE TABLE');
+        }
 
         toast.success(`[${newRow.id}] template 저장 성공`);
       } else {
-        // const response = await fetch(`/api/templates/${newRow.id}`, {
-        //   method: 'PATCH',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify({
-        //     id: newRow.id,
-        //     appName: newRow?.appName,
-        //     version: newRow?.version,
-        //   }),
-        // });
-        // if (!response.ok) {
-        //   toast.error('ERROR!');
-        //   throw Error('FAIL : TEMPLATE TABLE');
-        // }
+        const response = await fetch(`/api/templates/${newRow.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: newRow.id,
+            appName: newRow.appName,
+            version: newRow.version,
+            phoneName: newRow.phoneName,
+          }),
+        });
+        if (!response.ok) {
+          toast.error('ERROR!');
+          throw Error('FAIL : TEMPLATE TABLE');
+        }
 
         toast.success(`[${newRow.id}] template 업데이트 성공`);
       }
@@ -210,18 +207,26 @@ export default function TemplateTable({
       align: 'left',
       headerAlign: 'left',
     },
+    {
+      field: 'phoneName',
+      headerName: 'Phone Name',
+      width: 100,
+      editable: true,
+      align: 'left',
+      headerAlign: 'left',
+    },
 
     {
-      field: 'created_date',
-      headerName: 'created_date',
+      field: 'created_at',
+      headerName: 'created_at',
       width: 100,
       align: 'left',
       headerAlign: 'left',
       editable: false,
     },
     {
-      field: 'updated_date',
-      headerName: 'updated_date',
+      field: 'updated_at',
+      headerName: 'updated_at',
       width: 100,
       align: 'left',
       headerAlign: 'left',
@@ -278,7 +283,7 @@ export default function TemplateTable({
             onClick={handleDeleteClick(id)}
             color="inherit"
           />,
-          <Link href={`/admin/templates/${randomId()}`}>
+          <Link href={`/admin/templates/${v4()}`}>
             <GridActionsCellItem icon={<BsCopy size={14} />} label="Copy" color="inherit" />
           </Link>,
           <Link href={`/admin/templates/${row.id}`}>
