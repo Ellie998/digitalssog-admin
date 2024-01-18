@@ -19,10 +19,6 @@ const CanvasCategories = () => {
       text: '요소',
     },
     {
-      icon: <BsTextCenter />,
-      text: '텍스트',
-    },
-    {
       icon: <BsBack />,
       text: '배경',
     },

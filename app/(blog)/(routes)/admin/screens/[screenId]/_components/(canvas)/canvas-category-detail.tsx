@@ -47,11 +47,8 @@ const CanvasCategoryDetail = ({
       break;
     case '요소':
       return <DetailElement />;
-
       break;
-    // case '텍스트':
-    //   return <DetailText />;
-    //   break;
+
     case '배경':
       return <DetailBg />;
       break;
