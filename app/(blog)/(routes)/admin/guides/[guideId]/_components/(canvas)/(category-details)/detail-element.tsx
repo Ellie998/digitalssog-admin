@@ -29,8 +29,7 @@ import { Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 import { useEffect, useState } from 'react';
-import TextForm from './text-form';
-import IconForm from './icon-form';
+
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { elementDataType, elementDatasState, selectedElementState } from '../canvas-atom';
 
@@ -128,8 +127,6 @@ const DetailElement = () => {
             )}
           />
         )}
-        {uiType === 'text' && <TextForm />}
-        {uiType === 'icon' && <IconForm />}
       </form>
     </Form>
   );

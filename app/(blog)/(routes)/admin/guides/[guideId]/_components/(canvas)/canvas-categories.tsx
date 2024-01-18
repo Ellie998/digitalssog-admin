@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 
-import { BsBack, BsBox, BsFillGrid1X2Fill, BsFillPaletteFill, BsTextCenter } from 'react-icons/bs';
+import { BsBox, BsFillGrid1X2Fill } from 'react-icons/bs';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { canvasCategoryState, selectedElementState } from './canvas-atom';
 import { cn } from '@/lib/utils';
@@ -16,19 +16,7 @@ const CanvasCategories = () => {
     },
     {
       icon: <BsBox />,
-      text: '요소',
-    },
-    {
-      icon: <BsTextCenter />,
-      text: '텍스트',
-    },
-    {
-      icon: <BsBack />,
-      text: '배경',
-    },
-    {
-      icon: <BsFillPaletteFill />,
-      text: '테마',
+      text: '타겟 선택',
     },
   ];
   return (
