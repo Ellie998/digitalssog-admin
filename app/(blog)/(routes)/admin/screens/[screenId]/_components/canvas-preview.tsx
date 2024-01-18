@@ -2,7 +2,6 @@
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { cn } from '@/lib/utils';
 import { useEffect } from 'react';
-import { bgColorState } from './atoms';
 
 import PhoneBackground from '@/components/my-ui/phone-background';
 import PhoneDisplay from '@/components/my-ui/phone-display';
@@ -11,9 +10,11 @@ import PhoneNav from '@/components/my-ui/phone-nav';
 import Icon from '@/components/DisplayBox/AppDisplays/_components/UI/Icon';
 
 import {
+  bgColorState,
   canvasCategoryState,
   elementDatasState,
   elementDataType,
+  screenNameState,
   selectedElementState,
 } from './(canvas)/canvas-atom';
 import {
@@ -31,6 +32,7 @@ import { toast } from 'react-toastify';
 
 const CanvasPreview = () => {
   const bgColor = useRecoilValue(bgColorState);
+  const screenName = useRecoilValue(screenNameState);
   const [elementDatas, setElementDatas] = useRecoilState(elementDatasState);
 
   const setCanvasCategory = useSetRecoilState(canvasCategoryState);
@@ -123,12 +125,13 @@ const CanvasPreview = () => {
         <AlertDialogTrigger
           className="mt-10  w-fit px-12 py-2 mr-2 bg-slate-950 rounded text-white"
           onClick={() => {
+            console.log('screenName : ' + screenName);
             console.log('element Datas : ');
             console.log(elementDatas);
             console.log('BgColor : ' + bgColor);
           }}
         >
-          생성 완료
+          수정 완료
         </AlertDialogTrigger>
         <AlertDialogContent>
           <AlertDialogHeader>
@@ -140,7 +143,7 @@ const CanvasPreview = () => {
             <AlertDialogAction
               onClick={() => {
                 console.log('send data into DB...');
-                toast.success('Screen 생성 성공!');
+                toast.success('Screen 정보 수정 성공!');
               }}
             >
               확인

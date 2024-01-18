@@ -1,7 +1,7 @@
 'use client';
 import React from 'react';
 
-import { BsBack, BsBox, BsFillGrid1X2Fill, BsFillPaletteFill, BsTextCenter } from 'react-icons/bs';
+import { BsBack, BsBox, BsFillGrid1X2Fill, BsFillPaletteFill } from 'react-icons/bs';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { canvasCategoryState, selectedElementState } from './canvas-atom';
 import { cn } from '@/lib/utils';

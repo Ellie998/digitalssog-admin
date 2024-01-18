@@ -16,18 +16,21 @@ import {
 import { Input } from '@/components/ui/input';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
+import { useSetRecoilState } from 'recoil';
+import { screenNameState } from '../../canvas-atom';
 
 const formSchema = z.object({
   name: z.string().min(1),
 });
 
-const ScreenNameForm = ({ name, id }: { name: string; id: string }) => {
+const ScreenNameForm = ({ name, id }: { name?: string; id: string }) => {
   const [isSubmited, setIsSubmited] = useState(false);
+  const setScreenName = useSetRecoilState(screenNameState);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      name: name,
+      name: name ? name : '',
     },
   });
 
@@ -52,6 +55,7 @@ const ScreenNameForm = ({ name, id }: { name: string; id: string }) => {
       setIsSubmited(false);
     }
   }
+
   return (
     <div className="w-full p-6 ">
       <Form {...form}>
@@ -63,7 +67,15 @@ const ScreenNameForm = ({ name, id }: { name: string; id: string }) => {
               <FormItem>
                 <FormLabel className="text-lg">스크린 이름</FormLabel>
                 <FormControl>
-                  <Input placeholder="ex) 스크린1" {...field} />
+                  <Input
+                    placeholder="ex) 스크린1"
+                    onChange={(e) => {
+                      setScreenName(e.target.value);
+                      field.onChange(e);
+                    }}
+                    value={field.value}
+                    // {...field}
+                  />
                 </FormControl>
 
                 <FormMessage />

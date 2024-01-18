@@ -36,5 +36,13 @@ export const selectedElementState = atom({
   key: 'selectedElement',
   default: '',
 });
+export const bgColorState = atom({
+  key: 'bgColor',
+  default: '#ffffff',
+});
+export const screenNameState = atom({
+  key: 'screenName',
+  default: '',
+});
 
 //
