@@ -32,6 +32,19 @@ export type elementStyleType = {
   top: string;
 };
 
+export type targetDataType = {
+  top: string;
+  left: string;
+  width: string;
+  height: string;
+  zIndex: string;
+};
+
+export const targetDataState = atom<targetDataType>({
+  key: 'targetData',
+  default: { top: '', left: '', width: '', height: '', zIndex: '' },
+});
+
 export const canvasCategoryState = atom({
   key: 'canvasCategory',
   default: '템플릿',

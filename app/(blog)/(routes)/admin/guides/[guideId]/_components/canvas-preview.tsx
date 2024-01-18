@@ -7,12 +7,18 @@ import PhoneDisplay from '@/components/my-ui/phone-display';
 import PhoneHeader from '@/components/my-ui/phone-header';
 import PhoneNav from '@/components/my-ui/phone-nav';
 import Icon from '@/components/DisplayBox/AppDisplays/_components/UI/Icon';
-import { elementDataType, elementDatasState, screenDatasState } from './(canvas)/canvas-atom';
-import { useRecoilValue } from 'recoil';
+import {
+  elementDataType,
+  elementDatasState,
+  screenDatasState,
+  targetDataState,
+} from './(canvas)/canvas-atom';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 const CanvasPreview = () => {
   const screenDatas = useRecoilValue(screenDatasState);
   const elementDatas = useRecoilValue(elementDatasState);
+  const [targetData, setTargetData] = useRecoilState(targetDataState);
   return (
     <div className="flex flex-col items-center justify-center">
       <PhoneBackground>
@@ -49,6 +55,25 @@ const CanvasPreview = () => {
                 )}
               </div>
             ))}
+
+            <div
+              style={{
+                top: targetData.top,
+                left: targetData.left,
+                zIndex: targetData.zIndex,
+                width: targetData.width,
+                height: targetData.height,
+              }}
+              className={cn('cursor-pointer w-fit h-fit absolute border-2 border-red-500')}
+              draggable
+              onDragEnd={(e) => {
+                setTargetData((prevValue) => ({
+                  ...prevValue,
+                  top: `${Number(targetData.top.replace('px', '')) + e.nativeEvent.offsetY}px`,
+                  left: `${Number(targetData.left.replace('px', '')) + e.nativeEvent.offsetX}px`,
+                }));
+              }}
+            />
           </div>
         </PhoneDisplay>
         <PhoneNav />
