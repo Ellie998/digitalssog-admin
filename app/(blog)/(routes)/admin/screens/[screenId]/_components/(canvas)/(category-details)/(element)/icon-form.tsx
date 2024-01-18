@@ -36,8 +36,9 @@ const iconFormSchema = z.object({
   height: z.string().endsWith('px' || 'rem' || 'em' || '%' || 'content' || 'em' || 'vw', {
     message: '유효하지 않은 값',
   }),
+  padding: z.string(),
+  margin: z.string(),
   zIndex: z.number(),
-  id: z.string(),
 });
 
 const IconForm = () => {
@@ -64,24 +65,27 @@ const IconForm = () => {
           shadow: selectedElementInfo?.style.shadow,
           width: selectedElementInfo?.style.width,
           height: selectedElementInfo?.style.height,
+          padding: selectedElementInfo?.style.padding,
+          margin: selectedElementInfo?.style.margin,
           zIndex: Number(selectedElementInfo?.style.zIndex),
         }
       : {
           top: 0,
           left: 0,
-          name: 'circle',
-          fontSize: '14px',
-          textAlign: 'inherit',
-          color: '#000000',
-          backgroundColor: 'transparent',
+          name: '',
+          fontSize: '',
+          textAlign: '',
+          color: '',
+          backgroundColor: '',
           opacity: 100,
-          border: 'none',
+          border: '',
           borderRadius: 0,
-          shadow: 'inherit',
-          width: '100%',
-          height: 'fit-content',
+          shadow: '',
+          width: '',
+          height: '',
+          padding: '',
+          margin: '',
           zIndex: 0,
-          id: '',
         },
   });
   const formContent: Array<{
@@ -93,9 +97,36 @@ const IconForm = () => {
     { name: 'top', label: 'Position - top', type: 'number' },
     { name: 'left', label: 'Position - left', type: 'number' },
     { name: 'name', label: 'Icon Name', type: 'text' },
-    { name: 'fontSize', label: 'UI Font Size', type: 'text' },
-    { name: 'width', label: 'UI Width', type: 'text' },
-    { name: 'height', label: 'UI Height', type: 'text' },
+    {
+      name: 'fontSize',
+      label: 'UI Font Size',
+      type: 'text',
+      inputAttrybuttes: { placeholder: '14px' },
+    },
+    {
+      name: 'width',
+      label: 'UI Width',
+      type: 'text',
+      inputAttrybuttes: { placeholder: 'ex) 100px' },
+    },
+    {
+      name: 'height',
+      label: 'UI Height',
+      type: 'text',
+      inputAttrybuttes: { placeholder: 'ex) 100px' },
+    },
+    {
+      name: 'padding',
+      label: 'UI Padding',
+      type: 'text',
+      inputAttrybuttes: { placeholder: 'ex) 4px 4px 4px 4px' },
+    },
+    {
+      name: 'margin',
+      label: 'UI Margin',
+      type: 'text',
+      inputAttrybuttes: { placeholder: 'ex) 4px 4px 4px 4px' },
+    },
     { name: 'textAlign', label: 'UI Text Align', type: 'text' },
     { name: 'color', label: 'UI Text Color', type: 'color' },
     { name: 'backgroundColor', label: 'UI Background Color', type: 'color' },
@@ -105,14 +136,24 @@ const IconForm = () => {
       type: 'number',
       inputAttrybuttes: { min: 0, max: 100, step: 10 },
     },
-    { name: 'border', label: 'UI Border', type: 'text' },
+    {
+      name: 'border',
+      label: 'UI Border',
+      type: 'text',
+      inputAttrybuttes: { placeholder: '1px soild green' },
+    },
     {
       name: 'borderRadius',
       label: 'UI Border Radius',
       type: 'number',
       inputAttrybuttes: { min: 0, max: 100, step: 10 },
     },
-    { name: 'shadow', label: 'UI Shadow', type: 'text' },
+    {
+      name: 'shadow',
+      label: 'UI Shadow',
+      type: 'text',
+      inputAttrybuttes: { placeholder: '4px 4px 5px rgb(233,233,233,0.5)' },
+    },
     { name: 'zIndex', label: 'UI zIndex', type: 'number' },
   ];
 
@@ -150,29 +191,13 @@ const IconForm = () => {
       form.setValue('shadow', selectedElementInfo?.style.shadow || form.getValues().shadow);
       form.setValue('width', selectedElementInfo?.style.width || form.getValues().width);
       form.setValue('height', selectedElementInfo?.style.height || form.getValues().height);
+      form.setValue('padding', selectedElementInfo?.style.padding || form.getValues().padding);
+      form.setValue('margin', selectedElementInfo?.style.margin || form.getValues().margin);
       form.setValue('zIndex', Number(selectedElementInfo?.style.zIndex) || form.getValues().zIndex);
     }
   }, [elementDatas, selectedElement]);
   return (
     <>
-      <div className="grid grid-cols-3 gap-x-2 gap-y-4">
-        {formContent.map((item, i) => (
-          <FormField
-            key={item.name + i}
-            control={form.control}
-            // @ts-expect-error: textAlign 할당 타입 문제
-            name={item.name}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="mr-4">{item.label}</FormLabel>
-                <Input type={item.type} {...field} {...item.inputAttrybuttes} />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        ))}
-      </div>
-
       <Button
         className="mr-4"
         type="button"
@@ -180,30 +205,35 @@ const IconForm = () => {
           const styleObj = {
             fontSize: form.getValues().fontSize !== '' ? form.getValues().fontSize : '14px',
             textAlign: form.getValues().textAlign !== '' ? form.getValues().textAlign : 'inherit',
-            color: form.getValues().color,
-            backgroundColor: form.getValues().backgroundColor,
-            opacity: `${form.getValues().opacity !== null ? form.getValues().opacity : 100}%`,
-            border: form.getValues().border,
+            color: form.getValues().color !== '' ? form.getValues().color : '#000000',
+            backgroundColor:
+              form.getValues().backgroundColor !== ''
+                ? form.getValues().backgroundColor
+                : '#ffffff',
+            opacity: `${form.getValues().opacity}%`,
+            border: form.getValues().border !== '' ? form.getValues().border : 'none',
             borderRadius: `${form.getValues().borderRadius}px`,
-            shadow: form.getValues().shadow,
+            shadow: form.getValues().shadow !== '' ? form.getValues().shadow : 'none',
             width: form.getValues().width !== '' ? form.getValues().width : '100%',
             height: form.getValues().height !== '' ? form.getValues().height : 'fit-content',
+            padding: form.getValues().padding !== '' ? form.getValues().padding : '0px',
+            margin: form.getValues().margin !== '' ? form.getValues().margin : '0px',
             zIndex: `${form.getValues().zIndex}`,
-            left: `0px`,
-            top: `0px`,
+            left: `${form.getValues().left}px`,
+            top: `${form.getValues().top}px`,
           };
           selectedElementInfo
             ? onEditElementData({
                 type: selectedElementInfo?.type || 'icon',
                 style: styleObj,
                 id: selectedElement,
-                content: form.getValues().name,
+                content: form.getValues().name !== '' ? form.getValues().name : 'person-fill',
               })
             : onAddElementData({
                 type: 'icon',
                 style: styleObj,
                 id: uuidv4(),
-                content: form.getValues().name,
+                content: form.getValues().name !== '' ? form.getValues().name : 'person-fill',
               });
         }}
       >
@@ -222,6 +252,23 @@ const IconForm = () => {
           Delete
         </Button>
       )}
+      <div className="grid grid-cols-3 gap-x-2 gap-y-4">
+        {formContent.map((item, i) => (
+          <FormField
+            key={item.name + i}
+            control={form.control}
+            // @ts-expect-error: textAlign 할당 타입 문제
+            name={item.name}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className="mr-4">{item.label}</FormLabel>
+                <Input type={item.type} {...field} {...item.inputAttrybuttes} />
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        ))}
+      </div>
     </>
   );
 };

@@ -18,6 +18,8 @@ export type elementStyleType = {
   shadow: string;
   width: string;
   height: string;
+  padding: string;
+  margin: string;
   zIndex: string;
   left: string;
   top: string;
