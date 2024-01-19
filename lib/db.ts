@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client/edge";
+import { PrismaClient, Screen } from '@prisma/client/edge';
 
 declare global {
   // eslint-disable-next-line no-var
@@ -9,6 +9,24 @@ declare global {
 export const db = globalThis.prisma || new PrismaClient();
 // use `prisma` in your application to read and write data in your DB
 
-if (process.env.NODE_ENV !== "production") globalThis.prisma = db;
+if (process.env.NODE_ENV !== 'production') globalThis.prisma = db;
 
 // export const db = new PrismaClient();
+export type ScreenWithTemplate = Screen & {
+  template: {
+    id: string;
+    appName: string | null;
+    version: string | null;
+    phoneName: string | null;
+  } | null;
+};
+export type ScreenWithAllTemplate = Screen & {
+  template: {
+    id: string;
+    appName: string | null;
+    version: string | null;
+    phoneName: string | null;
+    main_color: string | null;
+    sub_color: string | null;
+  } | null;
+};

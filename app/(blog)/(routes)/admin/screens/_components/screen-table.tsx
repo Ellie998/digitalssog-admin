@@ -26,6 +26,8 @@ import { toast } from 'react-toastify';
 import { BsArrowsAngleExpand, BsCopy } from 'react-icons/bs';
 import Link from 'next/link';
 
+import { ScreenWithTemplate } from '@/lib/db';
+
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
   setRowModesModel: (newModel: (oldModel: GridRowModesModel) => GridRowModesModel) => void;
@@ -41,10 +43,9 @@ function EditToolbar(props: EditToolbarProps) {
       {
         id: id,
         name: '',
-        appName: '',
-        version: '',
         created_date: '',
         updated_date: '',
+        isNew: true,
       },
     ]);
     setRowModesModel((oldModel) => ({
@@ -64,24 +65,14 @@ function EditToolbar(props: EditToolbarProps) {
 
 export default function ScreenTable({
   data,
+  templateId,
 }: {
-  data: {
-    id: string;
-    name: string;
-    appName: string;
-    version: string;
-    main_color: string;
-    sub_color: string;
-    templateId: string;
-    created_date: string;
-    updated_date: string;
-  }[];
+  data: ScreenWithTemplate[];
+  templateId?: string;
 }) {
   const initialRows: GridRowsProp = data?.map((data) => ({
     id: data.id,
     name: data.name,
-    appName: data.appName,
-    version: data.version,
   }));
 
   const [rows, setRows] = React.useState(initialRows);
@@ -108,23 +99,23 @@ export default function ScreenTable({
 
       toast.success(`[${id}] Screen 삭제 성공`);
 
-      // try {
-      //   const response = await fetch(`/api/Screens/${id}`, {
-      //     method: 'DELETE',
-      //     headers: { 'Content-Type': 'application/json' },
-      //     body: JSON.stringify({
-      //       id: id,
-      //     }),
-      //   });
-      //   if (!response.ok) {
-      //     toast.error('ERROR!');
-      //     throw Error('FAIL : Screen TABLE');
-      //   }
+      try {
+        const response = await fetch(`/api/screens/${id}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: id,
+          }),
+        });
+        if (!response.ok) {
+          toast.error('ERROR!');
+          throw Error('FAIL : Screen TABLE');
+        }
 
-      //   toast.success(`[${id}] Screen 삭제 성공`);
-      // } catch (error) {
-      //   console.log(error);
-      // }
+        toast.success(`[${id}] Screen 삭제 성공`);
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -146,35 +137,35 @@ export default function ScreenTable({
 
     try {
       if (newRow.isNew) {
-        // const response = await fetch(`/api/Screens`, {
-        //   method: 'POST',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify({
-        //     id: newRow.id,
-        //     appName: newRow?.appName,
-        //     version: newRow?.version,
-        //   }),
-        // });
-        // if (!response.ok) {
-        //   toast.error('ERROR!');
-        //   throw Error('FAIL : Screen TABLE');
-        // }
+        const response = await fetch(`/api/screens`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: newRow.id,
+            name: newRow.name,
+            template_id: templateId ? templateId : null,
+          }),
+        });
+        if (!response.ok) {
+          toast.error('ERROR!');
+          throw Error('FAIL : Screen TABLE');
+        }
 
         toast.success(`[${newRow.id}] Screen 저장 성공`);
       } else {
-        // const response = await fetch(`/api/Screens/${newRow.id}`, {
-        //   method: 'PATCH',
-        //   headers: { 'Content-Type': 'application/json' },
-        //   body: JSON.stringify({
-        //     id: newRow.id,
-        //     appName: newRow?.appName,
-        //     version: newRow?.version,
-        //   }),
-        // });
-        // if (!response.ok) {
-        //   toast.error('ERROR!');
-        //   throw Error('FAIL : Screen TABLE');
-        // }
+        const response = await fetch(`/api/screens/${newRow.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: newRow.id,
+            name: newRow.name,
+            templateId: templateId ? templateId : null,
+          }),
+        });
+        if (!response.ok) {
+          toast.error('ERROR!');
+          throw Error('FAIL : Screen TABLE');
+        }
 
         toast.success(`[${newRow.id}] Screen 업데이트 성공`);
       }
@@ -206,23 +197,6 @@ export default function ScreenTable({
       align: 'left',
       headerAlign: 'left',
     },
-    {
-      field: 'appName',
-      headerName: 'App Name',
-      width: 100,
-      editable: true,
-      align: 'left',
-      headerAlign: 'left',
-    },
-    {
-      field: 'version',
-      headerName: 'Version',
-      width: 100,
-      editable: true,
-      align: 'left',
-      headerAlign: 'left',
-    },
-
     {
       field: 'actions',
       type: 'actions',

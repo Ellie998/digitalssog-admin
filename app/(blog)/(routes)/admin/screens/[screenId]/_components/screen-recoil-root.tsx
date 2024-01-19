@@ -8,22 +8,9 @@ import CanvasPreview from './canvas-preview';
 
 import CanvasCategories from './(canvas)/canvas-categories';
 import CanvasCategoryDetail from './(canvas)/canvas-category-detail';
+import { ScreenWithAllTemplate } from '@/lib/db';
 
-const ScreenRecoilRoot = ({
-  data,
-}: {
-  data?: {
-    id: string;
-    name: string;
-    appName: string;
-    version: string;
-    main_color: string;
-    sub_color: string;
-    templateId: string;
-    created_date: string;
-    updated_date: string;
-  };
-}) => {
+const ScreenRecoilRoot = ({ data }: { data: ScreenWithAllTemplate | null }) => {
   return (
     <RecoilRoot>
       <ResizablePanelGroup direction="horizontal" className="min-h-[500px] border ">

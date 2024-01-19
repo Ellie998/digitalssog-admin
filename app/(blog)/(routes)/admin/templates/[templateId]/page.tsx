@@ -1,3 +1,4 @@
+import { db } from '@/lib/db';
 import ScreenForm from '../../screens/_components/screen_form';
 import TemplateAppNameForm from './_components/appName_form';
 import TemplateMainColorForm from './_components/main_color_form';
@@ -10,23 +11,7 @@ const TemplateIdPage = async ({
     templateId: string;
   };
 }) => {
-  const templateData: {
-    id: string;
-    appName: string;
-    version: string;
-    main_color: string;
-    sub_color: string;
-    created_date: string;
-    updated_date: string;
-  } = {
-    id: 'dasjldaj-dasdak-dmqlwd',
-    appName: '기본',
-    version: '0.1.2',
-    main_color: '',
-    sub_color: '',
-    created_date: '2023.01.23',
-    updated_date: '2023.10.23',
-  };
+  const templateData = await db.template.findUnique({ where: { id: params.templateId } });
 
   return (
     <div className="flex flex-col px-10 pb-40 gap-y-20">
@@ -34,7 +19,8 @@ const TemplateIdPage = async ({
         <b>{params.templateId}</b> 템플릿의 Edit Page
       </h1>
       <div className="ml-auto">
-        created_at : {templateData.created_date}, updated_at : {templateData.updated_date}
+        <div>created_at : {templateData?.created_at + ''}</div>
+        <div>updated_at : {templateData?.updated_at + ''}</div>
       </div>
       <div className="grid grid-cols-2 gap-x-20 gap-y-32">
         <TemplateAppNameForm appName={templateData?.appName || ''} id={params.templateId} />
@@ -43,7 +29,7 @@ const TemplateIdPage = async ({
         <TemplateSubColorForm sub_color={templateData?.sub_color || ''} id={params.templateId} />
 
         <div className="col-start-1 col-end-3">
-          <ScreenForm id={params.templateId} />
+          <ScreenForm templateId={params.templateId} />
         </div>
       </div>
     </div>
