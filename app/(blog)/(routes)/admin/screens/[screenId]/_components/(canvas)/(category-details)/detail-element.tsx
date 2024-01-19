@@ -31,7 +31,7 @@ import { cn } from '@/lib/utils';
 import { useEffect, useState } from 'react';
 import TextForm from './(element)/text-form';
 import IconForm from './(element)/icon-form';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { elementDataType, elementDatasState, selectedElementState } from '../canvas-atom';
 
 const types = [

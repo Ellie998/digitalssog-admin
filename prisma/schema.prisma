@@ -130,7 +130,7 @@ model Screen {
 	id String @id @default(uuid())
 	name String?
 	bgColor String? 
-	elements Json?
+	elements String? @db.LongText
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt

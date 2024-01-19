@@ -27,6 +27,7 @@ export async function DELETE(req: Request) {
 
 export async function PATCH(req: Request, { params }: { params: { screenId: string } }) {
   const { name, bgColor, elements, appName, version } = await req.json();
+
   try {
     const templateIds = await db.template.findMany({
       where: {

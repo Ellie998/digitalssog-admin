@@ -1,7 +1,7 @@
 'use client';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { cn } from '@/lib/utils';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import PhoneBackground from '@/components/my-ui/phone-background';
 import PhoneDisplay from '@/components/my-ui/phone-display';
@@ -32,7 +32,9 @@ import { toast } from 'react-toastify';
 import { ScreenWithAllTemplate } from '@/lib/db';
 
 const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
-  const [bgColor, setBgColor] = useRecoilState(bgColorState);
+  const [isSubmit, setIsSubmit] = useState(false);
+
+  const [previreBgColor, setBgColor] = useRecoilState(bgColorState);
   const screenName = useRecoilValue(screenNameState);
   const [elementDatas, setElementDatas] = useRecoilState(elementDatasState);
 
@@ -44,8 +46,10 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
     setCanvasCategory('요소');
     setSelectedElement(e.currentTarget.id.replace('_container', '') || '');
   };
+
   useEffect(() => {
     setBgColor(data?.bgColor || '');
+    setElementDatas(JSON.parse(data?.elements || '[]'));
   }, []);
 
   useEffect(() => {}, [elementDatas, selectedElement]);
@@ -57,13 +61,37 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
     });
   };
 
+  async function onSubmit() {
+    try {
+      setIsSubmit(true);
+      const response = await fetch(`/api/screens/${data?.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          bgColor: previreBgColor,
+          screenName: screenName,
+          elements: JSON.stringify(elementDatas),
+        }),
+      });
+      if (!response.ok) {
+        toast.error('Fail to update screen datas');
+        throw Error('');
+      }
+      toast.success(`[screen ${data?.id}] 수정 성공!`);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsSubmit(false);
+    }
+  }
+
   return (
     <div className="flex flex-col justify-center items-center">
       <PhoneBackground>
-        <PhoneHeader backgroundColor={bgColor} />
-        <PhoneDisplay backgroundColor={bgColor} main={undefined}>
+        <PhoneHeader backgroundColor={previreBgColor} />
+        <PhoneDisplay backgroundColor={previreBgColor} main={undefined}>
           <div className="absolute ">
-            {elementDatas.map((data, i) => (
+            {elementDatas?.map((data, i) => (
               <div
                 key={data.type + i}
                 style={{
@@ -132,7 +160,7 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
             console.log('screenName : ' + screenName);
             console.log('element Datas : ');
             console.log(elementDatas);
-            console.log('BgColor : ' + bgColor);
+            console.log('BgColor : ' + previreBgColor);
           }}
         >
           수정 완료
@@ -145,9 +173,10 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
           <AlertDialogFooter>
             <AlertDialogCancel>취소</AlertDialogCancel>
             <AlertDialogAction
+              disabled={isSubmit}
               onClick={() => {
                 console.log('send data into DB...');
-                toast.success('Screen 정보 수정 성공!');
+                onSubmit();
               }}
             >
               확인
