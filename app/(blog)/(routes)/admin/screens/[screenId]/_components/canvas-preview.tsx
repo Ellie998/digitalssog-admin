@@ -29,9 +29,10 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { toast } from 'react-toastify';
+import { ScreenWithAllTemplate } from '@/lib/db';
 
-const CanvasPreview = () => {
-  const bgColor = useRecoilValue(bgColorState);
+const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
+  const [bgColor, setBgColor] = useRecoilState(bgColorState);
   const screenName = useRecoilValue(screenNameState);
   const [elementDatas, setElementDatas] = useRecoilState(elementDatasState);
 
@@ -43,6 +44,9 @@ const CanvasPreview = () => {
     setCanvasCategory('요소');
     setSelectedElement(e.currentTarget.id.replace('_container', '') || '');
   };
+  useEffect(() => {
+    setBgColor(data?.bgColor || '');
+  }, []);
 
   useEffect(() => {}, [elementDatas, selectedElement]);
 

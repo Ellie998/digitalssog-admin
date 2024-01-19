@@ -37,7 +37,7 @@ const CanvasCategoryDetail = ({ data }: { data?: ScreenWithAllTemplate | null })
       break;
 
     case '배경':
-      return <DetailBg />;
+      return <DetailBg id={data?.id || ''} bgColor={data?.bgColor || ''} />;
       break;
     case '테마':
       return (

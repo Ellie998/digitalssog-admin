@@ -26,7 +26,7 @@ const ScreenRecoilRoot = ({ data }: { data: ScreenWithAllTemplate | null }) => {
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel className="p-8">
-          <CanvasPreview />
+          <CanvasPreview data={data} />
         </ResizablePanel>
       </ResizablePanelGroup>
     </RecoilRoot>

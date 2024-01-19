@@ -108,7 +108,7 @@ export const selectedElementState = atom({
   default: '',
 });
 export const bgColorState = atom({
-  key: 'bgColor',
+  key: 'previewBgColor',
   default: '#ffffff',
 });
 export const screenNameState = atom({
