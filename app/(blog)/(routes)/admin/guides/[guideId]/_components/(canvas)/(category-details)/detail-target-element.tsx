@@ -13,6 +13,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { selectedScreenDataState, targetDataState } from '../canvas-atom';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
+import { GuideWithGuideComponentWithScreenElements, targetDataType } from '@/lib/db';
 
 const formSchema = z.object({
   top: z.string(),
@@ -22,14 +23,25 @@ const formSchema = z.object({
   zIndex: z.string(),
 });
 
-const DetailTargetElement = ({ guideId }: { guideId: string }) => {
+const DetailTargetElement = ({
+  guide,
+}: {
+  guide: GuideWithGuideComponentWithScreenElements | null;
+}) => {
   const [isSubmited, setIsSubmited] = useState(false);
   const setTargetData = useSetRecoilState(targetDataState);
   const selectedScreenData = useRecoilValue(selectedScreenDataState);
+  const targetBox: targetDataType = JSON.parse(guide?.guide_component?.targetBox || '{}');
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { top: '', left: '', width: '', height: '', zIndex: '' },
+    defaultValues: {
+      top: targetBox.top || '',
+      left: targetBox.left || '',
+      width: targetBox.width || '',
+      height: targetBox.height || '',
+      zIndex: targetBox.zIndex || '',
+    },
   });
   const formContent: Array<{
     name: string;
@@ -46,7 +58,7 @@ const DetailTargetElement = ({ guideId }: { guideId: string }) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsSubmited(true);
-      const response = await fetch(`/api/guide-components/${guideId}`, {
+      const response = await fetch(`/api/guide-components/${guide?.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -58,7 +70,7 @@ const DetailTargetElement = ({ guideId }: { guideId: string }) => {
         toast.error('Fail');
         throw Error('');
       }
-      toast.success(`guide [${guideId}] target 수정 성공!`);
+      toast.success(`guide [${guide?.id}] target 수정 성공!`);
     } catch (error) {
       console.log(error);
     } finally {

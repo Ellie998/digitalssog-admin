@@ -31,7 +31,7 @@ const DisplayRecoilRoot = ({
               <CanvasCategories />
             </div>
             <div className="">
-              <CanvasCategoryDetail templates={templates} guideId={guide?.id || ''} />
+              <CanvasCategoryDetail templates={templates} guide={guide} />
             </div>
           </>
         </ResizablePanel>

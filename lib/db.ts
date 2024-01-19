@@ -43,7 +43,16 @@ export type TemplateWithScreensNameAndId = Template & {
 export type GuideWithGuideComponentWithScreenElements = Guide & {
   guide_component: {
     id: string;
-    screen: { elements: string | null; id: string; name: string | null } | null;
+    screen: {
+      elements: string | null;
+      id: string;
+      name: string | null;
+      template: {
+        appName: string | null;
+        version: string | null;
+        phoneName: string | null;
+      } | null;
+    } | null;
     targetBox: string | null;
   } | null;
 };

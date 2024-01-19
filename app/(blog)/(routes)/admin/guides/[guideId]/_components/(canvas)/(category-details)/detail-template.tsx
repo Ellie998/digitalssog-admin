@@ -28,7 +28,11 @@ import { Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useSetRecoilState } from 'recoil';
 import { selectedScreenDataState } from '../canvas-atom';
-import { TemplateWithScreensNameAndId, db } from '@/lib/db';
+import {
+  GuideWithGuideComponentWithScreenElements,
+  TemplateWithScreensNameAndId,
+  db,
+} from '@/lib/db';
 
 import { useEffect, useState } from 'react';
 
@@ -39,13 +43,24 @@ const formSchema = z.object({
   screenName: z.string(),
 });
 
-const DetailTemplate = ({ templates }: { templates: TemplateWithScreensNameAndId[] }) => {
+const DetailTemplate = ({
+  templates,
+  guide,
+}: {
+  templates: TemplateWithScreensNameAndId[];
+  guide: GuideWithGuideComponentWithScreenElements | null;
+}) => {
   const [appVersions, setAppVersions] = useState([]);
   const [phoneNames, setPhoneNames] = useState([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { app: '', version: '', phoneName: '', screenName: '' },
+    defaultValues: {
+      app: guide?.guide_component?.screen?.template?.appName || '',
+      version: guide?.guide_component?.screen?.template?.version || '',
+      phoneName: guide?.guide_component?.screen?.template?.phoneName || '',
+      screenName: guide?.guide_component?.screen?.name || '',
+    },
   });
 
   const apps = templates?.map((template) => {
@@ -79,7 +94,7 @@ const DetailTemplate = ({ templates }: { templates: TemplateWithScreensNameAndId
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="p-4 space-y-8 ">
-        <div className="font-bold text-md">UI Theme Setting</div>
+        <div className="font-bold text-md">Template Setting</div>
 
         <FormField
           control={form.control}

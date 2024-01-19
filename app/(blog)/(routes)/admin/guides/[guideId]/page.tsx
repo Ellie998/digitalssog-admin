@@ -22,7 +22,18 @@ const GuideEditPage = async ({
           id: true,
           targetBox: true,
           screen: {
-            select: { elements: true, id: true, name: true },
+            select: {
+              elements: true,
+              id: true,
+              name: true,
+              template: {
+                select: {
+                  appName: true,
+                  version: true,
+                  phoneName: true,
+                },
+              },
+            },
           },
         },
       },
