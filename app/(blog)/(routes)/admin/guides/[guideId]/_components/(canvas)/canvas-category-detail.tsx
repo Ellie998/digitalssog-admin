@@ -7,15 +7,23 @@ import { canvasCategoryState } from './canvas-atom';
 import DetailTargetElement from './(category-details)/detail-target-element';
 import DetailTemplate from './(category-details)/detail-template';
 
-const CanvasCategoryDetail = () => {
+import { TemplateWithScreensNameAndId } from '@/lib/db';
+
+const CanvasCategoryDetail = ({
+  templates,
+  guideId,
+}: {
+  templates: TemplateWithScreensNameAndId[];
+  guideId: string;
+}) => {
   const canvasCategory = useRecoilValue(canvasCategoryState);
 
   switch (canvasCategory) {
     case '템플릿':
-      return <DetailTemplate />;
+      return <DetailTemplate templates={templates} />;
       break;
     case '타겟 선택':
-      return <DetailTargetElement />;
+      return <DetailTargetElement guideId={guideId} />;
 
       break;
 

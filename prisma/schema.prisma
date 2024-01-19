@@ -127,7 +127,7 @@ model Function_category {
 
 //
 model Screen {
-	id String @id @default(uuid())
+	id String @id @default(uuid()) @unique
 	name String?
 	bgColor String? 
 	elements String? @db.LongText
@@ -141,13 +141,13 @@ model Screen {
 	// template_version String? 
 	// template_phoneName String?
 	// phoneName String?
-  template_id String? @unique
+  template_id String? 
   template Template? @relation(fields: [template_id],references: [id])
 
   @@index([template_id])
 }
 model Template {
-	id String @id @default(uuid())
+	id String @id @default(uuid()) @unique
 	appName String?
   version String?
 	phoneName String?

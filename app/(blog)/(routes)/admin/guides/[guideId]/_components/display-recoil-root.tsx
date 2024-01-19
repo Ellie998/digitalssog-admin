@@ -10,8 +10,18 @@ import CanvasPreview from './canvas-preview';
 
 import CanvasCategories from './(canvas)/canvas-categories';
 import CanvasCategoryDetail from './(canvas)/canvas-category-detail';
+import { Screen } from '@prisma/client';
+import { GuideWithGuideComponentWithScreenElements, TemplateWithScreensNameAndId } from '@/lib/db';
 
-const DisplayRecoilRoot = () => {
+const DisplayRecoilRoot = ({
+  templates,
+  screens,
+  guide,
+}: {
+  templates: TemplateWithScreensNameAndId[];
+  screens: Screen[];
+  guide: GuideWithGuideComponentWithScreenElements | null;
+}) => {
   return (
     <RecoilRoot>
       <ResizablePanelGroup direction="horizontal" className="min-h-[500px] border ">
@@ -21,13 +31,13 @@ const DisplayRecoilRoot = () => {
               <CanvasCategories />
             </div>
             <div className="">
-              <CanvasCategoryDetail />
+              <CanvasCategoryDetail templates={templates} guideId={guide?.id || ''} />
             </div>
           </>
         </ResizablePanel>
         <ResizableHandle withHandle />
         <ResizablePanel className="p-8">
-          <CanvasPreview />
+          <CanvasPreview screens={screens} guide={guide} />
         </ResizablePanel>
       </ResizablePanelGroup>
     </RecoilRoot>

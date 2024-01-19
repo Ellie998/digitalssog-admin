@@ -17,9 +17,29 @@ const GuideEditPage = async ({
       id: params.guideId,
     },
     include: {
-      guide_component: true,
+      guide_component: {
+        select: {
+          id: true,
+          targetBox: true,
+          screen: {
+            select: { elements: true, id: true, name: true },
+          },
+        },
+      },
     },
   });
+  const templatesWithScreenNameAndId = await db.template.findMany({
+    where: {},
+    include: {
+      screens: {
+        select: {
+          id: true,
+          name: true,
+        },
+      },
+    },
+  });
+  const screens = await db.screen.findMany({});
 
   return (
     <div className="flex flex-col pb-40 gap-y-20">
@@ -36,7 +56,7 @@ const GuideEditPage = async ({
       </div>
       {/* guide component */}
 
-      <DisplayRecoilRoot />
+      <DisplayRecoilRoot templates={templatesWithScreenNameAndId} screens={screens} guide={guide} />
     </div>
   );
 };

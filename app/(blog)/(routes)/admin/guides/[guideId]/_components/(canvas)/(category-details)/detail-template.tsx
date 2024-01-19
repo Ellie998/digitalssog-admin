@@ -26,23 +26,11 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 
 import { Check, ChevronsUpDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
-import { useRecoilValue } from 'recoil';
-import { screenDatasState } from '../canvas-atom';
+import { useSetRecoilState } from 'recoil';
+import { selectedScreenDataState } from '../canvas-atom';
+import { TemplateWithScreensNameAndId, db } from '@/lib/db';
 
-const appVersions = [
-  { label: '0.1.2', value: '0.1.2' },
-  { label: '0.1.3', value: '0.1.3' },
-  { label: '0.1.4', value: '0.1.4' },
-] as const;
-const apps = [
-  { label: '기본', value: '기본' },
-  { label: '카카오톡', value: '카카오톡' },
-] as const;
-const phoneNames = [
-  { label: '갤럭시s8', value: 'galaxy_s_10' },
-  { label: '갤럭시노트10', value: 'galaxy_note_10' },
-  { label: '무관', value: 'none' },
-] as const;
+import { useEffect, useState } from 'react';
 
 const formSchema = z.object({
   app: z.string(),
@@ -51,18 +39,43 @@ const formSchema = z.object({
   screenName: z.string(),
 });
 
-const DetailTemplate = () => {
-  const screenDatas = useRecoilValue(screenDatasState);
+const DetailTemplate = ({ templates }: { templates: TemplateWithScreensNameAndId[] }) => {
+  const [appVersions, setAppVersions] = useState([]);
+  const [phoneNames, setPhoneNames] = useState([]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: { app: '', version: '', phoneName: '', screenName: '' },
   });
 
+  const apps = templates?.map((template) => {
+    return template.appName;
+  });
+
+  const setSelectedScreenData = useSetRecoilState(selectedScreenDataState);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
   }
 
+  useEffect(() => {
+    const tempAppVersions = templates?.filter((template) => {
+      return template.version;
+      // return form.getValues().app === template.appName ? template.version : false;
+    });
+    // console.log(tempAppVersions);
+    // setAppVersions([...tempAppVersions]);
+  }, [form.getValues().app]);
+  useEffect(() => {
+    const phoneNames = templates?.filter((template) => {
+      return form.getValues().app === template.appName &&
+        form.getValues().version === template.version
+        ? template.phoneName
+        : false;
+    });
+
+    // setPhoneNames(phoneNames);
+  }, [form.getValues().app, form.getValues().version]);
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="p-4 space-y-8 ">
@@ -85,9 +98,7 @@ const DetailTemplate = () => {
                         !field.value && 'text-muted-foreground',
                       )}
                     >
-                      {field.value
-                        ? apps.find((app) => app.value === field.value)?.label
-                        : 'Select App'}
+                      {field.value ? apps.find((app) => app === field.value) : 'Select App'}
                       <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
                     </Button>
                   </FormControl>
@@ -97,22 +108,22 @@ const DetailTemplate = () => {
                     <CommandInput placeholder="Search App..." />
                     <CommandEmpty>No App found.</CommandEmpty>
                     <CommandGroup>
-                      {apps.map((app) => (
+                      {apps?.map((app) => (
                         <CommandItem
                           className="cursor-pointer z-100"
-                          value={app.label}
-                          key={app.value}
+                          value={app || ''}
+                          key={app}
                           onSelect={() => {
-                            form.setValue('app', app.value);
+                            form.setValue('app', app || '');
                           }}
                         >
                           <Check
                             className={cn(
                               'mr-2 h-4 w-4',
-                              app.value === field.value ? 'opacity-100' : 'opacity-0',
+                              app === field.value ? 'opacity-100' : 'opacity-0',
                             )}
                           />
-                          {app.label}
+                          {app}
                         </CommandItem>
                       ))}
                     </CommandGroup>
@@ -142,7 +153,7 @@ const DetailTemplate = () => {
                       )}
                     >
                       {field.value
-                        ? appVersions.find((appVersion) => appVersion.value === field.value)?.label
+                        ? appVersions.find((appVersion) => appVersion === field.value)
                         : 'Select App Version'}
                       <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
                     </Button>
@@ -153,22 +164,22 @@ const DetailTemplate = () => {
                     <CommandInput placeholder="Search UI type..." />
                     <CommandEmpty>No App Version type found.</CommandEmpty>
                     <CommandGroup>
-                      {appVersions.map((version) => (
+                      {appVersions?.map((version) => (
                         <CommandItem
                           className="cursor-pointer z-100"
-                          value={version.label}
-                          key={version.value}
+                          value={version || ''}
+                          key={version || ''}
                           onSelect={() => {
-                            form.setValue('version', version.value);
+                            form.setValue('version', version || '');
                           }}
                         >
                           <Check
                             className={cn(
                               'mr-2 h-4 w-4',
-                              version.value === field.value ? 'opacity-100' : 'opacity-0',
+                              version === field.value ? 'opacity-100' : 'opacity-0',
                             )}
                           />
-                          {version.label}
+                          {version}
                         </CommandItem>
                       ))}
                     </CommandGroup>
@@ -198,7 +209,7 @@ const DetailTemplate = () => {
                       )}
                     >
                       {field.value
-                        ? phoneNames.find((phoneName) => phoneName.value === field.value)?.label
+                        ? phoneNames.find((phoneName) => phoneName === field.value)
                         : 'Select Phone Name'}
                       <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
                     </Button>
@@ -209,22 +220,22 @@ const DetailTemplate = () => {
                     <CommandInput placeholder="Search Phone Name..." />
                     <CommandEmpty>No Phone Name found.</CommandEmpty>
                     <CommandGroup>
-                      {phoneNames.map((phoneName) => (
+                      {phoneNames?.map((phoneName) => (
                         <CommandItem
                           className="cursor-pointer z-100"
-                          value={phoneName.label}
-                          key={phoneName.value}
+                          value={phoneName || ''}
+                          key={phoneName || ''}
                           onSelect={() => {
-                            form.setValue('phoneName', phoneName.value);
+                            form.setValue('phoneName', phoneName || '');
                           }}
                         >
                           <Check
                             className={cn(
                               'mr-2 h-4 w-4',
-                              phoneName.value === field.value ? 'opacity-100' : 'opacity-0',
+                              phoneName === field.value ? 'opacity-100' : 'opacity-0',
                             )}
                           />
-                          {phoneName.label}
+                          {phoneName}
                         </CommandItem>
                       ))}
                     </CommandGroup>
@@ -254,7 +265,9 @@ const DetailTemplate = () => {
                       )}
                     >
                       {field.value
-                        ? screenDatas.find((screenData) => screenData.name === field.value)?.name
+                        ? templates[0].screens?.find(
+                            (screenData) => screenData.name === field.value,
+                          )?.name
                         : 'Select Screen Name'}
                       <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
                     </Button>
@@ -265,13 +278,17 @@ const DetailTemplate = () => {
                     <CommandInput placeholder="Search Screen Name..." />
                     <CommandEmpty>No Screen Name found.</CommandEmpty>
                     <CommandGroup>
-                      {screenDatas.map((screenData) => (
+                      {templates[0].screens?.map((screenData) => (
                         <CommandItem
                           className="cursor-pointer z-100"
-                          value={screenData.name}
+                          value={screenData.name || ''}
                           key={screenData.name}
                           onSelect={() => {
-                            form.setValue('screenName', screenData.name);
+                            form.setValue('screenName', screenData.name || '');
+                            setSelectedScreenData({
+                              id: screenData.id,
+                              name: screenData.name || '',
+                            });
                           }}
                         >
                           <Check

@@ -7,25 +7,38 @@ import PhoneDisplay from '@/components/my-ui/phone-display';
 import PhoneHeader from '@/components/my-ui/phone-header';
 import PhoneNav from '@/components/my-ui/phone-nav';
 import Icon from '@/components/DisplayBox/AppDisplays/_components/UI/Icon';
-import {
-  elementDataType,
-  elementDatasState,
-  screenDatasState,
-  targetDataState,
-} from './(canvas)/canvas-atom';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { selectedScreenDataState, targetDataState } from './(canvas)/canvas-atom';
+import { useRecoilState } from 'recoil';
+import { Screen } from '@prisma/client';
+import { GuideWithGuideComponentWithScreenElements, elementDataType } from '@/lib/db';
+import { useEffect } from 'react';
 
-const CanvasPreview = () => {
-  const screenDatas = useRecoilValue(screenDatasState);
-  const elementDatas = useRecoilValue(elementDatasState);
+const CanvasPreview = ({
+  screens,
+  guide,
+}: {
+  screens: Screen[];
+  guide: GuideWithGuideComponentWithScreenElements | null;
+}) => {
   const [targetData, setTargetData] = useRecoilState(targetDataState);
+  const [selectedScreenData, setSelectedScreenData] = useRecoilState(selectedScreenDataState);
+  useEffect(() => {
+    setTargetData(JSON.parse(guide?.guide_component?.targetBox || '{}'));
+    setSelectedScreenData({
+      id: guide?.guide_component?.screen?.id || '',
+      name: guide?.guide_component?.screen?.name || '',
+    });
+  }, []);
+
   return (
     <div className="flex flex-col items-center justify-center">
       <PhoneBackground>
-        <PhoneHeader backgroundColor={screenDatas[0].bgColor} />
-        <PhoneDisplay backgroundColor={screenDatas[0].bgColor} main={undefined}>
+        <PhoneHeader backgroundColor={screens[0].bgColor || ''} />
+        <PhoneDisplay backgroundColor={screens[0].bgColor || ''} main={undefined}>
           <div className="absolute ">
-            {elementDatas.map((data: elementDataType, i: number) => (
+            {JSON.parse(
+              screens.find((screen) => screen.id === selectedScreenData.id)?.elements || '[]',
+            ).map((data: elementDataType, i: number) => (
               <div
                 key={data.type + i}
                 style={{ top: data.style.top, left: data.style.left, zIndex: data.style.zIndex }}
