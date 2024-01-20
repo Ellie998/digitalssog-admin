@@ -47,12 +47,8 @@ export async function PATCH(req: Request) {
   const { id, ...values } = await req.json();
   try {
     const templateData = await db.template.update({
-      where: {
-        id: id,
-      },
-      data: {
-        ...values,
-      },
+      where: { id: id },
+      data: { ...values },
     });
 
     if (!templateData) {

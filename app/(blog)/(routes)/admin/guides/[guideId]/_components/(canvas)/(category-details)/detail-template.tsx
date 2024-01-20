@@ -35,9 +35,10 @@ import {
 } from '@/lib/db';
 
 import { useEffect, useState } from 'react';
+import Link from 'next/link';
 
 const formSchema = z.object({
-  app: z.string(),
+  appName: z.string(),
   version: z.string(),
   phoneName: z.string(),
   screenName: z.string(),
@@ -50,22 +51,51 @@ const DetailTemplate = ({
   templates: TemplateWithScreensNameAndId[];
   guide: GuideWithGuideComponentWithScreenElements | null;
 }) => {
-  const [appVersions, setAppVersions] = useState([]);
-  const [phoneNames, setPhoneNames] = useState([]);
-
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      app: guide?.guide_component?.screen?.template?.appName || '',
+      appName: guide?.guide_component?.screen?.template?.appName || '',
       version: guide?.guide_component?.screen?.template?.version || '',
       phoneName: guide?.guide_component?.screen?.template?.phoneName || '',
       screenName: guide?.guide_component?.screen?.name || '',
     },
   });
+  const appNames: string[] = [];
+  const phoneNames: string[] = [];
+  const appVersions: string[] = [];
+  const screens: { id: string; name: string | null }[] = [];
 
-  const apps = templates?.map((template) => {
-    return template.appName;
+  const [appName, setAppName] = useState(guide?.guide_component?.screen?.template?.appName);
+  const [appVersion, setAppVersion] = useState(guide?.guide_component?.screen?.template?.version);
+  const [phoneName, setPhoneName] = useState(guide?.guide_component?.screen?.template?.phoneName);
+
+  templates?.forEach((template) => {
+    appNames.includes(template.appName || '') ? null : appNames.push(template.appName || '');
   });
+
+  templates?.forEach((template) => {
+    appName === template.appName && !appVersions.includes(template.version || '')
+      ? appVersions.push(template.version || '')
+      : null;
+  });
+  templates?.forEach((template) => {
+    appName === template.appName &&
+    appVersion === template.version &&
+    !phoneNames.includes(template.phoneName || '')
+      ? phoneNames.push(template.phoneName || '')
+      : null;
+  });
+
+  templates?.forEach((template) => {
+    appName === template.appName &&
+    appVersion === template.version &&
+    phoneName === template.phoneName
+      ? template.screens?.forEach((screen) => {
+          screens.push(screen);
+        })
+      : null;
+  });
+  useEffect(() => {}, [appName, appVersion, phoneName]);
 
   const setSelectedScreenData = useSetRecoilState(selectedScreenDataState);
 
@@ -73,24 +103,6 @@ const DetailTemplate = ({
     console.log(values);
   }
 
-  useEffect(() => {
-    const tempAppVersions = templates?.filter((template) => {
-      return template.version;
-      // return form.getValues().app === template.appName ? template.version : false;
-    });
-    // console.log(tempAppVersions);
-    // setAppVersions([...tempAppVersions]);
-  }, [form.getValues().app]);
-  useEffect(() => {
-    const phoneNames = templates?.filter((template) => {
-      return form.getValues().app === template.appName &&
-        form.getValues().version === template.version
-        ? template.phoneName
-        : false;
-    });
-
-    // setPhoneNames(phoneNames);
-  }, [form.getValues().app, form.getValues().version]);
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="p-4 space-y-8 ">
@@ -98,7 +110,7 @@ const DetailTemplate = ({
 
         <FormField
           control={form.control}
-          name="app"
+          name="appName"
           render={({ field }) => (
             <FormItem>
               <FormLabel className="mr-2">App Name</FormLabel>
@@ -113,7 +125,9 @@ const DetailTemplate = ({
                         !field.value && 'text-muted-foreground',
                       )}
                     >
-                      {field.value ? apps.find((app) => app === field.value) : 'Select App'}
+                      {field.value
+                        ? appNames.find((appName) => appName === field.value)
+                        : 'Select appName'}
                       <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
                     </Button>
                   </FormControl>
@@ -123,22 +137,23 @@ const DetailTemplate = ({
                     <CommandInput placeholder="Search App..." />
                     <CommandEmpty>No App found.</CommandEmpty>
                     <CommandGroup>
-                      {apps?.map((app) => (
+                      {appNames?.map((appName) => (
                         <CommandItem
                           className="cursor-pointer z-100"
-                          value={app || ''}
-                          key={app}
+                          value={appName || ''}
+                          key={appName}
                           onSelect={() => {
-                            form.setValue('app', app || '');
+                            form.setValue('appName', appName || '');
+                            setAppName(appName);
                           }}
                         >
                           <Check
                             className={cn(
                               'mr-2 h-4 w-4',
-                              app === field.value ? 'opacity-100' : 'opacity-0',
+                              appName === field.value ? 'opacity-100' : 'opacity-0',
                             )}
                           />
-                          {app}
+                          {appName}
                         </CommandItem>
                       ))}
                     </CommandGroup>
@@ -186,6 +201,7 @@ const DetailTemplate = ({
                           key={version || ''}
                           onSelect={() => {
                             form.setValue('version', version || '');
+                            setAppVersion(version);
                           }}
                         >
                           <Check
@@ -242,6 +258,7 @@ const DetailTemplate = ({
                           key={phoneName || ''}
                           onSelect={() => {
                             form.setValue('phoneName', phoneName || '');
+                            setPhoneName(phoneName);
                           }}
                         >
                           <Check
@@ -280,9 +297,7 @@ const DetailTemplate = ({
                       )}
                     >
                       {field.value
-                        ? templates[0].screens?.find(
-                            (screenData) => screenData.name === field.value,
-                          )?.name
+                        ? screens?.find((screenData) => screenData.name === field.value)?.name
                         : 'Select Screen Name'}
                       <ChevronsUpDown className="w-4 h-4 ml-2 opacity-50 shrink-0" />
                     </Button>
@@ -293,7 +308,7 @@ const DetailTemplate = ({
                     <CommandInput placeholder="Search Screen Name..." />
                     <CommandEmpty>No Screen Name found.</CommandEmpty>
                     <CommandGroup>
-                      {templates[0].screens?.map((screenData) => (
+                      {screens?.map((screenData) => (
                         <CommandItem
                           className="cursor-pointer z-100"
                           value={screenData.name || ''}
@@ -326,10 +341,10 @@ const DetailTemplate = ({
         />
 
         <Button className="mr-4" type="button">
-          Go To Add
+          <Link href={`/admin/templates`}>Go To Add</Link>
         </Button>
         <Button type="button" variant={'secondary'}>
-          Go To Edit
+          <Link href={`/admin/templates/`}>Go To Edit</Link>
         </Button>
       </form>
     </Form>

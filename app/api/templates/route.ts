@@ -5,18 +5,11 @@ import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-  const { id, appName, version, phoneName, main_color, sub_color } = await req.json();
+  const { ...values } = await req.json();
 
   try {
     const templateData = await db.template.create({
-      data: {
-        id,
-        appName,
-        version,
-        phoneName,
-        main_color,
-        sub_color,
-      },
+      data: { ...values },
     });
 
     if (!templateData) {

@@ -17,11 +17,12 @@ model App {
   icon String? 
   version String? 
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
 
   functions AppsOnFunctions[]
   methods Method[]
+  
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model Function {
@@ -84,14 +85,14 @@ model Guide {
   description String 
   order Int?
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
 
   methodId String?
   method Method? @relation(fields: [methodId],references: [id])
 
   guide_component Guide_component?  
   
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
   @@index([methodId])
 }
 
@@ -100,14 +101,15 @@ model Guide_component {
 
 	targetBox String?
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
 
   guideId String? @unique
   guide Guide? @relation(fields: [guideId],references: [id])
 
   screenId String? 
   screen Screen? @relation(fields: [screenId],references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 
   @@index([guideId])
   @@index([screenId])
@@ -132,8 +134,6 @@ model Screen {
 	bgColor String? 
 	elements String? @db.LongText
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
 
 	guide_components Guide_component[]
 
@@ -144,6 +144,8 @@ model Screen {
   template_id String? 
   template Template? @relation(fields: [template_id],references: [id])
 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
   @@index([template_id])
 }
 model Template {
@@ -153,9 +155,9 @@ model Template {
 	phoneName String?
   main_color String?
   sub_color String?
-
-	created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
 	
 	screens Screen[]
+	
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }

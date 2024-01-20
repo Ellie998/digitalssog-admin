@@ -159,7 +159,7 @@ export default function ScreenTable({
           body: JSON.stringify({
             id: newRow.id,
             name: newRow.name,
-            templateId: templateId ? templateId : null,
+            template_id: templateId ? templateId : null,
           }),
         });
         if (!response.ok) {
