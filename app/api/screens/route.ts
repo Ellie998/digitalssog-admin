@@ -5,16 +5,11 @@ import { db } from '@/lib/db';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request) {
-  const { id, template_id, name } = await req.json();
-  console.log(id, template_id);
+  const values = await req.json();
 
   try {
     const screenData = await db.screen.create({
-      data: {
-        id,
-        name,
-        template_id: template_id,
-      },
+      data: { ...values },
     });
 
     if (!screenData) {

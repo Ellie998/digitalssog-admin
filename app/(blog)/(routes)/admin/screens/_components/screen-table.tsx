@@ -91,6 +91,43 @@ export default function ScreenTable({
   const handleSaveClick = (id: GridRowId) => async () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
+  const handleCopyClick = (id: GridRowId) => async () => {
+    const originData = data.find((screen) => screen?.id === id);
+    const newId = randomId();
+    setRows((oldRows) => [
+      ...oldRows,
+      {
+        id: newId,
+        name: originData?.name + ' copy',
+        created_date: '',
+        updated_date: '',
+        isNew: true,
+      },
+    ]);
+    setRowModesModel((oldModel) => ({ ...oldModel, [id]: { mode: GridRowModes.View } }));
+
+    try {
+      const response = await fetch(`/api/screens`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: newId,
+          name: originData?.name + ' copy',
+          bgColor: originData?.bgColor,
+          elements: originData?.elements,
+          template_id: templateId ? templateId : null,
+        }),
+      });
+      if (!response.ok) {
+        toast.error('ERROR!');
+        throw Error('FAIL : Screen TABLE');
+      }
+
+      toast.success(`[${newId}] Screen 저장 성공`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleDeleteClick = (id: GridRowId) => async () => {
     const text = '확인 버튼을 누르면 선택한 Screen이 삭제됩니다. ';
@@ -247,9 +284,13 @@ export default function ScreenTable({
             onClick={handleDeleteClick(id)}
             color="inherit"
           />,
-          <Link href={`/admin/screens/${randomId()}`}>
-            <GridActionsCellItem icon={<BsCopy size={14} />} label="Copy" color="inherit" />
-          </Link>,
+
+          <GridActionsCellItem
+            icon={<BsCopy size={14} />}
+            label="Copy"
+            color="inherit"
+            onClick={handleCopyClick(id)}
+          />,
           <Link href={`/admin/screens/${row.id}`}>
             <GridActionsCellItem
               icon={<BsArrowsAngleExpand size={14} />}
