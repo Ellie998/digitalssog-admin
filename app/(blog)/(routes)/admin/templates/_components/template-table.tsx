@@ -25,8 +25,9 @@ import { Button } from '@/components/ui/button';
 import { toast } from 'react-toastify';
 import { BsArrowsAngleExpand, BsCopy } from 'react-icons/bs';
 import Link from 'next/link';
-import { Template } from '@prisma/client';
+
 import { v4 } from 'uuid';
+import { TemplateWithScreenId } from '@/lib/db';
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -65,7 +66,7 @@ function EditToolbar(props: EditToolbarProps) {
   );
 }
 
-export default function TemplateTable({ data }: { data: Template[] }) {
+export default function TemplateTable({ data }: { data: TemplateWithScreenId[] }) {
   const initialRows: GridRowsProp = data?.map((data) => ({
     id: data.id,
     appName: data.appName,
@@ -91,7 +92,60 @@ export default function TemplateTable({ data }: { data: Template[] }) {
   const handleSaveClick = (id: GridRowId) => async () => {
     setRowModesModel({ ...rowModesModel, [id]: { mode: GridRowModes.View } });
   };
+  const handleCopyClick = (id: GridRowId) => async () => {
+    const originData = data.find((template) => template?.id === id);
+    const newId = v4();
+    setRows((oldRows) => [
+      ...oldRows,
+      {
+        id: newId,
+        appName: originData?.appName,
+        version: originData?.version + 'copy',
+        phoneName: originData?.phoneName,
+        created_date: '',
+        updated_date: '',
+        isNew: true,
+      },
+    ]);
+    setRowModesModel((oldModel) => ({ ...oldModel, [id]: { mode: GridRowModes.View } }));
 
+    try {
+      const response = await fetch(`/api/templates`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: newId,
+          appName: originData?.appName,
+          version: originData?.version + 'copy',
+          phoneName: originData?.phoneName,
+          main_color: originData?.main_color,
+          sub_color: originData?.sub_color,
+        }),
+      });
+      originData?.screens?.forEach(async (screen) => {
+        const screensResponse = await fetch(`/api/screen/${screen.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: screen.id,
+            template_id: newId,
+          }),
+        });
+        if (screensResponse.ok) {
+          toast.error('템플릿 스크린 복제 성공!');
+        }
+      });
+
+      if (!response.ok) {
+        toast.error('템플릿 복제 실패!');
+        throw Error('FAIL : Template Copy in Template table');
+      }
+
+      toast.success(`[${newId}] Template 복제 성공`);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const handleDeleteClick = (id: GridRowId) => async () => {
     const text = '확인 버튼을 누르면 선택한 Template이 삭제됩니다. ';
     if (confirm(text) == true) {
@@ -283,9 +337,13 @@ export default function TemplateTable({ data }: { data: Template[] }) {
             onClick={handleDeleteClick(id)}
             color="inherit"
           />,
-          <Link href={`/admin/templates/${v4()}`}>
-            <GridActionsCellItem icon={<BsCopy size={14} />} label="Copy" color="inherit" />
-          </Link>,
+
+          <GridActionsCellItem
+            icon={<BsCopy size={14} />}
+            label="Copy"
+            color="inherit"
+            onClick={handleCopyClick(id)}
+          />,
           <Link href={`/admin/templates/${row.id}`}>
             <GridActionsCellItem
               icon={<BsArrowsAngleExpand size={14} />}

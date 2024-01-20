@@ -31,6 +31,13 @@ export type ScreenWithAllTemplate = Screen & {
   } | null;
 };
 
+export type TemplateWithScreenId = Template & {
+  screens:
+    | {
+        id: string;
+      }[]
+    | null;
+};
 export type TemplateWithScreensNameAndId = Template & {
   screens:
     | {
