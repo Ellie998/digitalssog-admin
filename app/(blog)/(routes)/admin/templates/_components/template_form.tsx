@@ -2,12 +2,15 @@ import { db } from '@/lib/db';
 import TemplateTable from './template-table';
 
 const TemplateForm = async () => {
-  const templateWithScreenId = await db.template.findMany({
+  const templateWithScreenWithhoutGuideComId = await db.template.findMany({
     where: {},
     include: {
       screens: {
         select: {
           id: true,
+          name: true,
+          bgColor: true,
+          elements: true,
         },
       },
     },
@@ -16,7 +19,7 @@ const TemplateForm = async () => {
   return (
     <div className="w-full shadow-md">
       <TemplateTable
-        data={templateWithScreenId?.map((data) => ({
+        data={templateWithScreenWithhoutGuideComId?.map((data) => ({
           ...data,
         }))}
       />

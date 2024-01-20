@@ -31,10 +31,13 @@ export type ScreenWithAllTemplate = Screen & {
   } | null;
 };
 
-export type TemplateWithScreenId = Template & {
+export type TemplateWithScreenWithhoutGuideComId = Template & {
   screens:
     | {
         id: string;
+        name: string | null;
+        elements: string | null;
+        bgColor: string | null;
       }[]
     | null;
 };

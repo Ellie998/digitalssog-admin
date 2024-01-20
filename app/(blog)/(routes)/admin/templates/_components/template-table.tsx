@@ -27,7 +27,7 @@ import { BsArrowsAngleExpand, BsCopy } from 'react-icons/bs';
 import Link from 'next/link';
 
 import { v4 } from 'uuid';
-import { TemplateWithScreenId } from '@/lib/db';
+import { TemplateWithScreenWithhoutGuideComId } from '@/lib/db';
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -66,7 +66,7 @@ function EditToolbar(props: EditToolbarProps) {
   );
 }
 
-export default function TemplateTable({ data }: { data: TemplateWithScreenId[] }) {
+export default function TemplateTable({ data }: { data: TemplateWithScreenWithhoutGuideComId[] }) {
   const initialRows: GridRowsProp = data?.map((data) => ({
     id: data.id,
     appName: data.appName,
@@ -123,16 +123,19 @@ export default function TemplateTable({ data }: { data: TemplateWithScreenId[] }
         }),
       });
       originData?.screens?.forEach(async (screen) => {
-        const screensResponse = await fetch(`/api/screen/${screen.id}`, {
-          method: 'PATCH',
+        const screensResponse = await fetch(`/api/screens`, {
+          method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            id: screen.id,
+            id: v4(),
             template_id: newId,
+            elements: screen.elements,
+            name: screen.name,
+            bgColor: screen.bgColor,
           }),
         });
         if (screensResponse.ok) {
-          toast.error('템플릿 스크린 복제 성공!');
+          toast.success('템플릿 스크린 복제 성공!');
         }
       });
 
