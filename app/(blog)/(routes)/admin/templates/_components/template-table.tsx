@@ -150,11 +150,11 @@ export default function TemplateTable({ data }: { data: TemplateWithScreenWithho
     }
   };
   const handleDeleteClick = (id: GridRowId) => async () => {
+    const originData = data.find((template) => template?.id === id);
+
     const text = '확인 버튼을 누르면 선택한 Template이 삭제됩니다. ';
     if (confirm(text) == true) {
       setRows(rows.filter((row) => row.id !== id));
-
-      toast.success(`[${id}] template 삭제 성공`);
 
       try {
         const response = await fetch(`/api/templates/${id}`, {
@@ -163,6 +163,18 @@ export default function TemplateTable({ data }: { data: TemplateWithScreenWithho
           body: JSON.stringify({
             id: id,
           }),
+        });
+        originData?.screens?.forEach(async (screen) => {
+          const screensResponse = await fetch(`/api/screens/${screen.id}`, {
+            method: 'DELETE',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              id: screen.id,
+            }),
+          });
+          if (screensResponse.ok) {
+            toast.success('템플릿에 속하는 스크린 삭제 성공!');
+          }
         });
         if (!response.ok) {
           toast.error('ERROR!');
