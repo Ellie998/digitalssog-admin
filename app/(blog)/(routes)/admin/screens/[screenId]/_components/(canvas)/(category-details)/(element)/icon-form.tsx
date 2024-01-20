@@ -240,17 +240,55 @@ const IconForm = () => {
         {selectedElementInfo ? 'edit' : 'Add'}
       </Button>
       {selectedElement && (
-        <Button
-          className="mr-4"
-          type="button"
-          variant={'destructive'}
-          onClick={() => {
-            onDeleteElementData({ id: selectedElement });
-            setSelectedElement('');
-          }}
-        >
-          Delete
-        </Button>
+        <>
+          <Button
+            className="mr-4"
+            type="button"
+            variant={'default'}
+            onClick={() => {
+              const styleObj = {
+                fontSize: form.getValues().fontSize !== '' ? form.getValues().fontSize : '14px',
+                textAlign:
+                  form.getValues().textAlign !== '' ? form.getValues().textAlign : 'inherit',
+                color: form.getValues().color !== '' ? form.getValues().color : '#000000',
+                backgroundColor:
+                  form.getValues().backgroundColor !== ''
+                    ? form.getValues().backgroundColor
+                    : '#ffffff',
+                opacity: `${form.getValues().opacity}%`,
+                border: form.getValues().border !== '' ? form.getValues().border : 'none',
+                borderRadius: `${form.getValues().borderRadius}px`,
+                shadow: form.getValues().shadow !== '' ? form.getValues().shadow : 'none',
+                width: form.getValues().width !== '' ? form.getValues().width : '100%',
+                height: form.getValues().height !== '' ? form.getValues().height : 'fit-content',
+                padding: form.getValues().padding !== '' ? form.getValues().padding : '0px',
+                margin: form.getValues().margin !== '' ? form.getValues().margin : '0px',
+                zIndex: `${form.getValues().zIndex}`,
+                left: `${form.getValues().left + 20}px`,
+                top: `${form.getValues().top + 20}px`,
+              };
+              onAddElementData({
+                type: 'icon',
+                style: styleObj,
+                id: uuidv4(),
+                content: form.getValues().name !== '' ? form.getValues().name : 'person-fill',
+              });
+            }}
+          >
+            Copy
+          </Button>
+          <Button
+            className="mr-4"
+            type="button"
+            variant={'destructive'}
+            onClick={() => {
+              onDeleteElementData({ id: selectedElement });
+              setSelectedElement('');
+            }}
+          >
+            Delete
+          </Button>
+        </>
       )}
       <div className="grid grid-cols-3 gap-x-2 gap-y-4">
         {formContent.map((item, i) => (

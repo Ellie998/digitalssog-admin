@@ -86,11 +86,17 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center">
+    <div className="flex flex-col items-center justify-center">
       <PhoneBackground>
         <PhoneHeader backgroundColor={previreBgColor} />
-        <PhoneDisplay backgroundColor={previreBgColor} main={undefined}>
-          <div className="absolute ">
+        <PhoneDisplay
+          backgroundColor={previreBgColor}
+          main={undefined}
+          onClick={(e: { target: { id: string } }) => {
+            e.target?.id === 'phone_display_main' && setSelectedElement('');
+          }}
+        >
+          <div className="absolute">
             {elementDatas?.map((data, i) => (
               <div
                 key={data.type + i}
@@ -155,7 +161,7 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
 
       <AlertDialog>
         <AlertDialogTrigger
-          className="mt-10  w-fit px-12 py-2 mr-2 bg-slate-950 rounded text-white"
+          className="px-12 py-2 mt-10 mr-2 text-white rounded w-fit bg-slate-950"
           onClick={() => {
             console.log('screenName : ' + screenName);
             console.log('element Datas : ');
