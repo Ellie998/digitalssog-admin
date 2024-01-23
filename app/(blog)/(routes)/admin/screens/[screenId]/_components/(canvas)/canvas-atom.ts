@@ -10,6 +10,7 @@ export type elementDataType = {
   type: string;
   content: string;
   style: elementStyleType;
+  onClick?: { id: string; type: string; event: string };
   id: string;
 };
 
@@ -118,6 +119,14 @@ export const bgColorState = atom({
 export const screenNameState = atom({
   key: 'screenName',
   default: '',
+});
+export const onClickPreviewState = atom({
+  key: 'onClickPreview',
+  default: {
+    id: '',
+    type: '',
+    event: '',
+  },
 });
 
 //

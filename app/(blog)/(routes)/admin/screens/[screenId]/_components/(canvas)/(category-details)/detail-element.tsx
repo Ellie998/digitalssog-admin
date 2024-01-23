@@ -69,7 +69,9 @@ const DetailElement = () => {
         }}
         className="p-4 space-y-8 "
       >
-        <div className="font-bold text-md">{selectedElementInfo ? 'Edit UI' : 'New UI'}</div>
+        <div className="font-bold text-md">
+          {selectedElementInfo ? 'Edit UI : ' + selectedElementInfo.id : 'New UI'}
+        </div>
         {/* type */}
         {!selectedElementInfo && (
           <FormField

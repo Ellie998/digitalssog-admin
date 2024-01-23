@@ -14,6 +14,7 @@ import {
   canvasCategoryState,
   elementDatasState,
   elementDataType,
+  onClickPreviewState,
   screenNameState,
   selectedElementState,
 } from './(canvas)/canvas-atom';
@@ -36,6 +37,7 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
 
   const [previreBgColor, setBgColor] = useRecoilState(bgColorState);
   const screenName = useRecoilValue(screenNameState);
+  const [onClickPreview, setOnClickState] = useRecoilState(onClickPreviewState);
   const [elementDatas, setElementDatas] = useRecoilState(elementDatasState);
 
   const setCanvasCategory = useSetRecoilState(canvasCategoryState);
@@ -50,6 +52,7 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
   useEffect(() => {
     setBgColor(data?.bgColor || '');
     setElementDatas(JSON.parse(data?.elements || '[]'));
+    setOnClickState({ id: '', type: '', event: '' });
   }, []);
 
   useEffect(() => {}, [elementDatas, selectedElement]);
@@ -115,6 +118,7 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
                     id: e.currentTarget.id.replace('_container', ''),
                     type: data.type,
                     content: data.content,
+                    onClick: data.onClick,
                     style: {
                       ...data.style,
                       top: `${Number(data.style.top.replace('px', '')) + e.nativeEvent.offsetY}px`,
@@ -144,10 +148,23 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
                   <div
                     // @ts-expect-error: textAlign 할당 타입 문제
                     style={{ ...data.style }}
-                    id={undefined}
-                    name={data.content || 'empty...'}
+                    id={data.id}
+                    name={data.content || ''}
                     className={undefined}
-                    onClick={undefined}
+                    onClick={
+                      data.onClick?.id
+                        ? () => {
+                            const element = document.getElementById(data.onClick?.id || data.id);
+                            if (data.onClick?.type === 'hide') element?.classList.add('hidden');
+                            if (data.onClick?.type === 'show') element?.classList.remove('hidden');
+                            if (data.onClick?.type === 'add') {
+                              element ? (element.textContent += data.onClick.event) : null;
+                            } else {
+                              element ? new Function(data.onClick?.event || '')() : null;
+                            }
+                          }
+                        : () => {}
+                    }
                   >
                     {data.content}
                   </div>
@@ -167,6 +184,8 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
             console.log('element Datas : ');
             console.log(elementDatas);
             console.log('BgColor : ' + previreBgColor);
+            console.log('element onClick type: ' + onClickPreview.type);
+            console.log('element onClick id: ' + onClickPreview.id);
           }}
         >
           수정 완료

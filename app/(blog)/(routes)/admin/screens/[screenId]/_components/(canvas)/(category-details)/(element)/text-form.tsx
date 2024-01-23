@@ -45,6 +45,9 @@ const formSchema = z.object({
   padding: z.string(),
   margin: z.string(),
   zIndex: z.number(),
+  onClickType: z.string(),
+  onClickId: z.string(),
+  onClickEvent: z.string(),
   id: z.string(),
 });
 
@@ -59,7 +62,7 @@ const TextForm = () => {
       ? {
           top: Number(selectedElementInfo?.style.top),
           left: Number(selectedElementInfo?.style.left),
-          text: '...',
+          text: selectedElementInfo.content,
           fontSize: selectedElementInfo?.style.fontSize,
           textAlign: selectedElementInfo?.style.textAlign,
           color: selectedElementInfo?.style.color,
@@ -73,6 +76,9 @@ const TextForm = () => {
           padding: selectedElementInfo?.style.padding,
           margin: selectedElementInfo?.style.margin,
           zIndex: Number(selectedElementInfo?.style.zIndex),
+          onClickType: selectedElementInfo?.onClick?.type,
+          onClickId: selectedElementInfo?.onClick?.id,
+          onClickEvent: selectedElementInfo?.onClick?.event,
         }
       : {
           top: 0,
@@ -91,9 +97,19 @@ const TextForm = () => {
           padding: '',
           margin: '',
           zIndex: 0,
+          onClickType: '',
+          onClickId: '',
+          onClickEvent: '',
         },
   });
+
   const formContent: Array<{
+    name: string;
+    label: string;
+    type: string;
+    inputAttrybuttes?: object;
+  }> = [{ name: 'text', label: 'UI Text', type: 'text' }];
+  const styleFormContent: Array<{
     name: string;
     label: string;
     type: string;
@@ -101,7 +117,6 @@ const TextForm = () => {
   }> = [
     { name: 'top', label: 'Position - top', type: 'number' },
     { name: 'left', label: 'Position - left', type: 'number' },
-    { name: 'text', label: 'UI Text', type: 'text' },
     {
       name: 'fontSize',
       label: 'UI Font Size',
@@ -158,10 +173,27 @@ const TextForm = () => {
     },
     { name: 'zIndex', label: 'UI zIndex', type: 'number' },
   ];
+  const onClickFormContent: Array<{
+    name: string;
+    label: string;
+    type: string;
+    inputAttrybuttes?: object;
+  }> = [
+    {
+      name: 'onClickType',
+      label: 'onClick event type',
+      type: 'text',
+      inputAttrybuttes: {
+        placeholder: 'hide/show/add/animation',
+      },
+    },
+    { name: 'onClickId', label: 'onClick target Id', type: 'text' },
+    { name: 'onClickEvent', label: 'onClick Event', type: 'text' },
+  ];
 
   useEffect(() => {
     if (selectedElement) {
-      form.setValue('text', selectedElementInfo?.content || '...');
+      form.setValue('text', selectedElementInfo?.content || '');
       form.setValue(
         'top',
         Number(selectedElementInfo?.style.top.replace('px', '')) || form.getValues().top,
@@ -196,6 +228,11 @@ const TextForm = () => {
       form.setValue('padding', selectedElementInfo?.style.padding || form.getValues().padding);
       form.setValue('margin', selectedElementInfo?.style.margin || form.getValues().margin);
       form.setValue('zIndex', Number(selectedElementInfo?.style.zIndex) || form.getValues().zIndex);
+      form.setValue(
+        'onClickType',
+        selectedElementInfo?.onClick?.type || form.getValues().onClickType,
+      );
+      form.setValue('onClickId', selectedElementInfo?.onClick?.id || form.getValues().onClickId);
     }
   }, [elementDatas, selectedElement]);
 
@@ -217,8 +254,18 @@ const TextForm = () => {
             border: form.getValues().border !== '' ? form.getValues().border : 'none',
             borderRadius: `${form.getValues().borderRadius}px`,
             shadow: form.getValues().shadow !== '' ? form.getValues().shadow : 'none',
-            width: form.getValues().width !== '' ? form.getValues().width : '100%',
-            height: form.getValues().height !== '' ? form.getValues().height : 'fit-content',
+            width:
+              form.getValues().width !== ''
+                ? form.getValues().width
+                : form.getValues().text === ''
+                ? '50px'
+                : '100%',
+            height:
+              form.getValues().height !== ''
+                ? form.getValues().height
+                : form.getValues().text === ''
+                ? '50px'
+                : 'fit-content',
             padding: form.getValues().padding !== '' ? form.getValues().padding : '0px',
             margin: form.getValues().margin !== '' ? form.getValues().margin : '0px',
             zIndex: `${form.getValues().zIndex}`,
@@ -230,13 +277,29 @@ const TextForm = () => {
                 type: selectedElementInfo?.type || 'text',
                 style: styleObj,
                 id: selectedElement,
-                content: form.getValues().text || 'empty...',
+                content: form.getValues().text || '',
+                onClick:
+                  form.getValues().onClickId === ''
+                    ? undefined
+                    : {
+                        type: form.getValues().onClickType || '',
+                        id: form.getValues().onClickId || '',
+                        event: form.getValues().onClickEvent || '',
+                      },
               })
             : onAddElementData({
                 type: 'text',
                 style: styleObj,
                 id: uuidv4(),
-                content: form.getValues().text || 'empty...',
+                content: form.getValues().text || '',
+                onClick:
+                  form.getValues().onClickId === ''
+                    ? undefined
+                    : {
+                        type: form.getValues().onClickType || '',
+                        id: form.getValues().onClickId || '',
+                        event: form.getValues().onClickEvent || '',
+                      },
               });
         }}
       >
@@ -262,8 +325,18 @@ const TextForm = () => {
                 border: form.getValues().border !== '' ? form.getValues().border : 'none',
                 borderRadius: `${form.getValues().borderRadius}px`,
                 shadow: form.getValues().shadow !== '' ? form.getValues().shadow : 'none',
-                width: form.getValues().width !== '' ? form.getValues().width : '100%',
-                height: form.getValues().height !== '' ? form.getValues().height : 'fit-content',
+                width:
+                  form.getValues().width !== ''
+                    ? form.getValues().width
+                    : form.getValues().text === ''
+                    ? '50px'
+                    : '100%',
+                height:
+                  form.getValues().height !== ''
+                    ? form.getValues().height
+                    : form.getValues().text === ''
+                    ? '50px'
+                    : 'fit-content',
                 padding: form.getValues().padding !== '' ? form.getValues().padding : '0px',
                 margin: form.getValues().margin !== '' ? form.getValues().margin : '0px',
                 zIndex: `${form.getValues().zIndex}`,
@@ -274,7 +347,15 @@ const TextForm = () => {
                 type: 'text',
                 style: styleObj,
                 id: uuidv4(),
-                content: form.getValues().text || 'empty...',
+                content: form.getValues().text || '',
+                onClick:
+                  form.getValues().onClickId === ''
+                    ? undefined
+                    : {
+                        type: form.getValues().onClickType || '',
+                        id: form.getValues().onClickId || '',
+                        event: form.getValues().onClickEvent || '',
+                      },
               });
             }}
           >
@@ -294,22 +375,61 @@ const TextForm = () => {
         </>
       )}
 
-      <div className="grid grid-cols-3 gap-x-2 gap-y-4">
-        {formContent.map((item, i) => (
-          <FormField
-            key={item.name + i}
-            control={form.control}
-            // @ts-expect-error: textAlign 할당 타입 문제
-            name={item.name}
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="mr-4">{item.label}</FormLabel>
-                <Input type={item.type} {...field} {...item.inputAttrybuttes} />
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        ))}
+      <div className="grid gap-y-8">
+        <div className="grid grid-cols-3 gap-x-2 gap-y-4">
+          {formContent.map((item, i) => (
+            <FormField
+              className={item.name === 'onClickType' && 'col-start-1 col-end-3'}
+              key={item.name + i}
+              control={form.control}
+              // @ts-expect-error: textAlign 할당 타입 문제
+              name={item.name}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mr-4">{item.label}</FormLabel>
+                  <Input type={item.type} {...field} {...item.inputAttrybuttes} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
+        </div>
+        <div className="grid grid-cols-3 gap-x-2 gap-y-4">
+          {styleFormContent.map((item, i) => (
+            <FormField
+              className={item.name === 'onClickType' && 'col-start-1 col-end-3'}
+              key={item.name + i}
+              control={form.control}
+              // @ts-expect-error: textAlign 할당 타입 문제
+              name={item.name}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mr-4">{item.label}</FormLabel>
+                  <Input type={item.type} {...field} {...item.inputAttrybuttes} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 gap-x-2 gap-y-4">
+          {onClickFormContent.map((item, i) => (
+            <FormField
+              className={item.name === 'onClickType' && 'col-start-1 col-end-3'}
+              key={item.name + i}
+              control={form.control}
+              // @ts-expect-error: textAlign 할당 타입 문제
+              name={item.name}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mr-4">{item.label}</FormLabel>
+                  <Input type={item.type} {...field} {...item.inputAttrybuttes} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
+        </div>
       </div>
     </>
   );
