@@ -129,7 +129,14 @@ const IconForm = () => {
     },
     { name: 'textAlign', label: 'UI Text Align', type: 'text' },
     { name: 'color', label: 'UI Text Color', type: 'color' },
-    { name: 'backgroundColor', label: 'UI Background Color', type: 'color' },
+    {
+      name: 'backgroundColor',
+      label: 'UI Background Color',
+      type: 'text',
+      inputAttrybuttes: {
+        placeholder: 'rgba(0,0,0,0)',
+      },
+    },
     {
       name: 'opacity',
       label: 'UI opacity',
@@ -209,7 +216,7 @@ const IconForm = () => {
             backgroundColor:
               form.getValues().backgroundColor !== ''
                 ? form.getValues().backgroundColor
-                : '#ffffff',
+                : '#ffffff0',
             opacity: `${form.getValues().opacity}%`,
             border: form.getValues().border !== '' ? form.getValues().border : 'none',
             borderRadius: `${form.getValues().borderRadius}px`,
@@ -254,7 +261,7 @@ const IconForm = () => {
                 backgroundColor:
                   form.getValues().backgroundColor !== ''
                     ? form.getValues().backgroundColor
-                    : '#ffffff',
+                    : '#ffffff0',
                 opacity: `${form.getValues().opacity}%`,
                 border: form.getValues().border !== '' ? form.getValues().border : 'none',
                 borderRadius: `${form.getValues().borderRadius}px`,

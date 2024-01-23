@@ -57,7 +57,9 @@ const DetailElement = () => {
     resolver: zodResolver(formSchema),
     defaultValues: { type: '' },
   });
-  useEffect(() => {}, [selectedElement]);
+  useEffect(() => {
+    setUiType(selectedElementInfo?.type || '');
+  }, [selectedElement]);
 
   return (
     <Form {...form}>
