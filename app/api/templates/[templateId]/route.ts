@@ -43,11 +43,12 @@ export async function POST(req: Request, { params }: { params: { templateId: str
   }
 }
 
-export async function PATCH(req: Request) {
-  const { id, ...values } = await req.json();
+export async function PATCH(req: Request, { params }: { params: { templateId: string } }) {
+  const { ...values } = await req.json();
+
   try {
     const templateData = await db.template.update({
-      where: { id: id },
+      where: { id: params.templateId },
       data: { ...values },
     });
 

@@ -34,17 +34,17 @@ const TemplateVersionForm = ({ version, id }: { version: string; id: string }) =
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsSubmited(true);
-      // const response = await fetch(`/api/templates/${id}`, {
-      //   method: 'PATCH',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     version: values.version,
-      //   }),
-      // });
-      // if (!response.ok) {
-      //   toast.error('Fail');
-      //   throw Error('');
-      // }
+      const response = await fetch(`/api/templates/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          version: values.version,
+        }),
+      });
+      if (!response.ok) {
+        toast.error('Template App Version 수정 Fail');
+        throw Error('Template App Version 수정 Fail');
+      }
       toast.success(`[${id}] version : ${values.version} 수정 성공!`);
     } catch (error) {
       console.log(error);

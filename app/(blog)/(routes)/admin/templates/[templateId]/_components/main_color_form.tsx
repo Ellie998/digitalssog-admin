@@ -34,17 +34,17 @@ const TemplateMainColorForm = ({ main_color, id }: { main_color: string; id: str
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsSubmited(true);
-      // const response = await fetch(`/api/templates/${id}`, {
-      //   method: 'PATCH',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({
-      //     main_color: values.main_color,
-      //   }),
-      // });
-      // if (!response.ok) {
-      //   toast.error('Fail');
-      //   throw Error('');
-      // }
+      const response = await fetch(`/api/templates/${id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          main_color: values.main_color,
+        }),
+      });
+      if (!response.ok) {
+        toast.error('Template Main Color 수정 Fail');
+        throw Error('Template Main Color 수정 Fail');
+      }
       toast.success(`[${id}] main_color 수정 성공!` + ' : ' + values.main_color);
     } catch (error) {
       console.log(error);
