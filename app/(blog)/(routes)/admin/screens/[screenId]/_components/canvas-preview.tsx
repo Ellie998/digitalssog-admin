@@ -144,7 +144,7 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
                     name={data.content || 'circle'}
                     className={data.className}
                     onClick={
-                      data.onClick?.event !== ''
+                      data.onClick.event !== ''
                         ? () => {
                             const element = document.getElementById(data.onClick?.id || data.id);
                             if (data.onClick?.type === 'hide') element?.classList.add('hidden');

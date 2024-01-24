@@ -227,8 +227,8 @@ const TextForm = () => {
       form.setValue('onClickId', selectedElementInfo?.onClick?.id || '');
       form.setValue('onClickEvent', selectedElementInfo?.onClick?.event || '');
     }
-  }, [selectedElement, selectedElementInfo]);
-
+  }, [elementDatas, selectedElement, selectedElementInfo]);
+  console.log(form.getValues().onClickEvent);
   return (
     <>
       <Button
@@ -271,32 +271,24 @@ const TextForm = () => {
                 style: styleObj,
                 id: selectedElement,
                 className: form.getValues().className,
-
                 content: form.getValues().text || '',
-                onClick:
-                  form.getValues().onClickId === ''
-                    ? undefined
-                    : {
-                        type: form.getValues().onClickType || '',
-                        id: form.getValues().onClickId || '',
-                        event: form.getValues().onClickEvent || '',
-                      },
+                onClick: {
+                  type: form.getValues().onClickType || '',
+                  id: form.getValues().onClickId || '',
+                  event: form.getValues().onClickEvent || '',
+                },
               })
             : onAddElementData({
                 type: 'text',
                 style: styleObj,
                 id: uuidv4(),
                 className: form.getValues().className,
-
                 content: form.getValues().text || '',
-                onClick:
-                  form.getValues().onClickId === ''
-                    ? undefined
-                    : {
-                        type: form.getValues().onClickType || '',
-                        id: form.getValues().onClickId || '',
-                        event: form.getValues().onClickEvent || '',
-                      },
+                onClick: {
+                  type: form.getValues().onClickType || '',
+                  id: form.getValues().onClickId || '',
+                  event: form.getValues().onClickEvent || '',
+                },
               });
           console.log(selectedElementInfo ? 'EDIT!' : 'ADD!');
         }}
@@ -341,21 +333,19 @@ const TextForm = () => {
                 left: `${form.getValues().left + 20}px`,
                 top: `${form.getValues().top + 20}px`,
               };
+              const randomId = uuidv4();
+              setSelectedElement(randomId);
               onAddElementData({
                 type: 'text',
                 style: styleObj,
-                id: uuidv4(),
+                id: randomId,
                 className: form.getValues().className,
-
                 content: form.getValues().text || '',
-                onClick:
-                  form.getValues().onClickId === ''
-                    ? undefined
-                    : {
-                        type: form.getValues().onClickType || '',
-                        id: form.getValues().onClickId || '',
-                        event: form.getValues().onClickEvent || '',
-                      },
+                onClick: {
+                  type: form.getValues().onClickType || '',
+                  id: form.getValues().onClickId || '',
+                  event: form.getValues().onClickEvent || '',
+                },
               });
             }}
           >

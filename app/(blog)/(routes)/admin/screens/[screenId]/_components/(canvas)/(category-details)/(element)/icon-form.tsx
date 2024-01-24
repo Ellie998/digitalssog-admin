@@ -233,7 +233,7 @@ const IconForm = () => {
       form.setValue('onClickId', selectedElementInfo?.onClick?.id || '');
       form.setValue('onClickEvent', selectedElementInfo?.onClick?.event || '');
     }
-  }, [selectedElement, selectedElementInfo]);
+  }, [elementDatas, selectedElement, selectedElementInfo]);
   return (
     <>
       <Button
@@ -267,14 +267,11 @@ const IconForm = () => {
                 id: selectedElement,
                 className: form.getValues().className,
                 content: form.getValues().name !== '' ? form.getValues().name : 'person-fill',
-                onClick:
-                  form.getValues().onClickId === ''
-                    ? undefined
-                    : {
-                        type: form.getValues().onClickType || '',
-                        id: form.getValues().onClickId || '',
-                        event: form.getValues().onClickEvent || '',
-                      },
+                onClick: {
+                  type: form.getValues().onClickType || '',
+                  id: form.getValues().onClickId || '',
+                  event: form.getValues().onClickEvent || '',
+                },
               })
             : onAddElementData({
                 type: 'icon',
@@ -282,14 +279,11 @@ const IconForm = () => {
                 id: uuidv4(),
                 className: form.getValues().className,
                 content: form.getValues().name !== '' ? form.getValues().name : 'person-fill',
-                onClick:
-                  form.getValues().onClickId === ''
-                    ? undefined
-                    : {
-                        type: form.getValues().onClickType || '',
-                        id: form.getValues().onClickId || '',
-                        event: form.getValues().onClickEvent || '',
-                      },
+                onClick: {
+                  type: form.getValues().onClickType || '',
+                  id: form.getValues().onClickId || '',
+                  event: form.getValues().onClickEvent || '',
+                },
               });
           console.log(selectedElementInfo ? 'EDIT!' : 'ADD!');
         }}
@@ -330,14 +324,11 @@ const IconForm = () => {
                 id: uuidv4(),
                 className: form.getValues().className,
                 content: form.getValues().name !== '' ? form.getValues().name : 'person-fill',
-                onClick:
-                  form.getValues().onClickId === ''
-                    ? undefined
-                    : {
-                        type: form.getValues().onClickType || '',
-                        id: form.getValues().onClickId || '',
-                        event: form.getValues().onClickEvent || '',
-                      },
+                onClick: {
+                  type: form.getValues().onClickType || '',
+                  id: form.getValues().onClickId || '',
+                  event: form.getValues().onClickEvent || '',
+                },
               });
             }}
           >
