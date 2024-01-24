@@ -15,11 +15,14 @@ import { elementDatasState, selectedElementState } from '../../canvas-atom';
 import { Input } from '@/components/ui/input';
 import { useEffect } from 'react';
 import { useElementDataManipulation } from '../../canvas-libs';
+import { Textarea } from '@/components/ui/textarea';
 
 const iconFormSchema = z.object({
+  name: z.string(),
+  className: z.string(),
+  //
   top: z.number(),
   left: z.number(),
-  name: z.string(),
   fontSize: z.string().endsWith('px' || 'rem' || 'em' || '%' || 'content' || 'em' || 'vw', {
     message: '유효하지 않은 값',
   }),
@@ -39,6 +42,10 @@ const iconFormSchema = z.object({
   padding: z.string(),
   margin: z.string(),
   zIndex: z.number(),
+  //
+  onClickType: z.string(),
+  onClickId: z.string(),
+  onClickEvent: z.string(),
 });
 
 const IconForm = () => {
@@ -52,9 +59,11 @@ const IconForm = () => {
     resolver: zodResolver(iconFormSchema),
     defaultValues: selectedElementInfo
       ? {
+          name: selectedElementInfo.content,
+          className: selectedElementInfo.className,
+          //
           top: Number(selectedElementInfo?.style.top),
           left: Number(selectedElementInfo?.style.left),
-          name: selectedElementInfo.content,
           fontSize: selectedElementInfo?.style.fontSize,
           textAlign: selectedElementInfo?.style.textAlign,
           color: selectedElementInfo?.style.color,
@@ -68,11 +77,16 @@ const IconForm = () => {
           padding: selectedElementInfo?.style.padding,
           margin: selectedElementInfo?.style.margin,
           zIndex: Number(selectedElementInfo?.style.zIndex),
+          onClickType: selectedElementInfo?.onClick?.type,
+          onClickId: selectedElementInfo?.onClick?.id,
+          onClickEvent: selectedElementInfo?.onClick?.event,
         }
       : {
+          name: '',
+          className: '',
+          //
           top: 0,
           left: 0,
-          name: '',
           fontSize: '',
           textAlign: '',
           color: '',
@@ -86,6 +100,10 @@ const IconForm = () => {
           padding: '',
           margin: '',
           zIndex: 0,
+          //
+          onClickType: '',
+          onClickId: '',
+          onClickEvent: '',
         },
   });
   const formContent: Array<{
@@ -94,9 +112,17 @@ const IconForm = () => {
     type: string;
     inputAttrybuttes?: object;
   }> = [
+    { name: 'name', label: 'Icon Name', type: 'text' },
+    { name: 'className', label: 'UI ClassName', type: 'text' },
+  ];
+  const styleFormContent: Array<{
+    name: string;
+    label: string;
+    type: string;
+    inputAttrybuttes?: object;
+  }> = [
     { name: 'top', label: 'Position - top', type: 'number' },
     { name: 'left', label: 'Position - left', type: 'number' },
-    { name: 'name', label: 'Icon Name', type: 'text' },
     {
       name: 'fontSize',
       label: 'UI Font Size',
@@ -163,46 +189,51 @@ const IconForm = () => {
     },
     { name: 'zIndex', label: 'UI zIndex', type: 'number' },
   ];
+  const onClickFormContent: Array<{
+    name: string;
+    label: string;
+    type: string;
+    inputAttrybuttes?: object;
+  }> = [
+    {
+      name: 'onClickType',
+      label: 'onClick event type',
+      type: 'text',
+      inputAttrybuttes: {
+        placeholder: 'hide/show/add/animation',
+      },
+    },
+    { name: 'onClickId', label: 'onClick target Id', type: 'text' },
+  ];
 
   useEffect(() => {
     if (selectedElement) {
-      form.setValue('name', selectedElementInfo?.content || form.getValues().name);
-      form.setValue(
-        'top',
-        Number(selectedElementInfo?.style.top.replace('px', '')) || form.getValues().top,
-      );
-      form.setValue(
-        'left',
-        Number(selectedElementInfo?.style.left.replace('px', '')) || form.getValues().left,
-      );
-      form.setValue('fontSize', selectedElementInfo?.style.fontSize || form.getValues().fontSize);
-      form.setValue(
-        'textAlign',
-        selectedElementInfo?.style.textAlign || form.getValues().textAlign,
-      );
-      form.setValue('color', selectedElementInfo?.style.color || form.getValues().color);
-      form.setValue(
-        'backgroundColor',
-        selectedElementInfo?.style.backgroundColor || form.getValues().backgroundColor,
-      );
-      form.setValue(
-        'opacity',
-        Number(selectedElementInfo?.style.opacity.replace('%', '')) || form.getValues().opacity,
-      );
-      form.setValue('border', selectedElementInfo?.style.border || form.getValues().border);
+      form.setValue('name', selectedElementInfo?.content || '');
+      form.setValue('className', selectedElementInfo?.className || '');
+      //
+      form.setValue('top', Number(selectedElementInfo?.style.top.replace('px', '')) || 0);
+      form.setValue('left', Number(selectedElementInfo?.style.left.replace('px', '')) || 0);
+      form.setValue('fontSize', selectedElementInfo?.style.fontSize || '14px');
+      form.setValue('textAlign', selectedElementInfo?.style.textAlign || '');
+      form.setValue('color', selectedElementInfo?.style.color || '#000000');
+      form.setValue('backgroundColor', selectedElementInfo?.style.backgroundColor || '#ffffff0');
+      form.setValue('opacity', Number(selectedElementInfo?.style.opacity.replace('%', '')) || 100);
+      form.setValue('border', selectedElementInfo?.style.border || '');
       form.setValue(
         'borderRadius',
-        Number(selectedElementInfo?.style.borderRadius.replace('px', '')) ||
-          form.getValues().borderRadius,
+        Number(selectedElementInfo?.style.borderRadius.replace('px', '')) || 0,
       );
-      form.setValue('shadow', selectedElementInfo?.style.shadow || form.getValues().shadow);
-      form.setValue('width', selectedElementInfo?.style.width || form.getValues().width);
-      form.setValue('height', selectedElementInfo?.style.height || form.getValues().height);
-      form.setValue('padding', selectedElementInfo?.style.padding || form.getValues().padding);
-      form.setValue('margin', selectedElementInfo?.style.margin || form.getValues().margin);
-      form.setValue('zIndex', Number(selectedElementInfo?.style.zIndex) || form.getValues().zIndex);
+      form.setValue('shadow', selectedElementInfo?.style.shadow || '');
+      form.setValue('width', selectedElementInfo?.style.width || '100%');
+      form.setValue('height', selectedElementInfo?.style.height || 'fit-content');
+      form.setValue('padding', selectedElementInfo?.style.padding || '');
+      form.setValue('margin', selectedElementInfo?.style.margin || '');
+      form.setValue('zIndex', Number(selectedElementInfo?.style.zIndex) || 0);
+      form.setValue('onClickType', selectedElementInfo?.onClick?.type || '');
+      form.setValue('onClickId', selectedElementInfo?.onClick?.id || '');
+      form.setValue('onClickEvent', selectedElementInfo?.onClick?.event || '');
     }
-  }, [elementDatas, selectedElement]);
+  }, [selectedElement, selectedElementInfo]);
   return (
     <>
       <Button
@@ -234,14 +265,33 @@ const IconForm = () => {
                 type: selectedElementInfo?.type || 'icon',
                 style: styleObj,
                 id: selectedElement,
+                className: form.getValues().className,
                 content: form.getValues().name !== '' ? form.getValues().name : 'person-fill',
+                onClick:
+                  form.getValues().onClickId === ''
+                    ? undefined
+                    : {
+                        type: form.getValues().onClickType || '',
+                        id: form.getValues().onClickId || '',
+                        event: form.getValues().onClickEvent || '',
+                      },
               })
             : onAddElementData({
                 type: 'icon',
                 style: styleObj,
                 id: uuidv4(),
+                className: form.getValues().className,
                 content: form.getValues().name !== '' ? form.getValues().name : 'person-fill',
+                onClick:
+                  form.getValues().onClickId === ''
+                    ? undefined
+                    : {
+                        type: form.getValues().onClickType || '',
+                        id: form.getValues().onClickId || '',
+                        event: form.getValues().onClickEvent || '',
+                      },
               });
+          console.log(selectedElementInfo ? 'EDIT!' : 'ADD!');
         }}
       >
         {selectedElementInfo ? 'edit' : 'Add'}
@@ -278,7 +328,16 @@ const IconForm = () => {
                 type: 'icon',
                 style: styleObj,
                 id: uuidv4(),
+                className: form.getValues().className,
                 content: form.getValues().name !== '' ? form.getValues().name : 'person-fill',
+                onClick:
+                  form.getValues().onClickId === ''
+                    ? undefined
+                    : {
+                        type: form.getValues().onClickType || '',
+                        id: form.getValues().onClickId || '',
+                        event: form.getValues().onClickEvent || '',
+                      },
               });
             }}
           >
@@ -297,22 +356,69 @@ const IconForm = () => {
           </Button>
         </>
       )}
-      <div className="grid grid-cols-3 gap-x-2 gap-y-4">
-        {formContent.map((item, i) => (
+      <div className="grid gap-y-8">
+        <div className="grid gap-y-4">
+          {formContent.map((item, i) => (
+            <FormField
+              key={item.name + i}
+              control={form.control}
+              // @ts-expect-error: textAlign 할당 타입 문제
+              name={item.name}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mr-4">{item.label}</FormLabel>
+                  <Input type={item.type} {...field} {...item.inputAttrybuttes} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
+        </div>
+        <div className="grid grid-cols-3 gap-x-2 gap-y-4">
+          {styleFormContent.map((item, i) => (
+            <FormField
+              key={item.name + i}
+              control={form.control}
+              // @ts-expect-error: textAlign 할당 타입 문제
+              name={item.name}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mr-4">{item.label}</FormLabel>
+                  <Input type={item.type} {...field} {...item.inputAttrybuttes} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
+        </div>
+        <div className="grid grid-cols-1 gap-x-2 gap-y-4">
+          {onClickFormContent.map((item, i) => (
+            <FormField
+              key={item.name + i}
+              control={form.control}
+              // @ts-expect-error: textAlign 할당 타입 문제
+              name={item.name}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="mr-4">{item.label}</FormLabel>
+                  <Input type={item.type} {...field} {...item.inputAttrybuttes} />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          ))}
           <FormField
-            key={item.name + i}
             control={form.control}
-            // @ts-expect-error: textAlign 할당 타입 문제
-            name={item.name}
+            name={'onClickEvent'}
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="mr-4">{item.label}</FormLabel>
-                <Input type={item.type} {...field} {...item.inputAttrybuttes} />
+                <FormLabel className="mr-4">onClick Event</FormLabel>
+                <Textarea {...field} />
                 <FormMessage />
               </FormItem>
             )}
           />
-        ))}
+        </div>
       </div>
     </>
   );

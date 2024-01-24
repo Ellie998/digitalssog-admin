@@ -1,9 +1,9 @@
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { elementDataType, elementDatasState, selectedElementState } from './canvas-atom';
 
 export const useElementDataManipulation = () => {
-  const setElementDatas = useSetRecoilState(elementDatasState);
-  const elementDatas = useRecoilValue(elementDatasState);
+  const [elementDatas, setElementDatas] = useRecoilState(elementDatasState);
+
   const selectedElement = useRecoilValue(selectedElementState);
 
   const selectedElementInfo = elementDatas.find((element) => element.id === selectedElement);

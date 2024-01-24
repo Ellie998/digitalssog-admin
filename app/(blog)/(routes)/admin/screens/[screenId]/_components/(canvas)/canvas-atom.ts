@@ -12,6 +12,7 @@ export type elementDataType = {
   style: elementStyleType;
   onClick?: { id: string; type: string; event: string };
   id: string;
+  className: string;
 };
 
 export type elementStyleType = {
