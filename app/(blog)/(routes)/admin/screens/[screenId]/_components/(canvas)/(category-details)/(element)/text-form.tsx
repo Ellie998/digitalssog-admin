@@ -228,7 +228,7 @@ const TextForm = () => {
       form.setValue('onClickEvent', selectedElementInfo?.onClick?.event || '');
     }
   }, [elementDatas, selectedElement, selectedElementInfo]);
-  console.log(form.getValues().onClickEvent);
+
   return (
     <>
       <Button
