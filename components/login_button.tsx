@@ -25,34 +25,33 @@ const LoginButton = () => {
     email: '' || undefined,
   });
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        // Supabase 클라이언트에서 현재 사용자 정보 가져오기
-        const currentUser = await supabase.auth.getUser();
+  const fetchUserData = async () => {
+    try {
+      // Supabase 클라이언트에서 현재 사용자 정보 가져오기
+      const currentUser = await supabase.auth.getUser();
 
-        // 현재 사용자가 로그인한 경우
-        if (currentUser.data.user) {
-          // 사용자 email 가져오기
-          const userEmail = currentUser.data.user?.email;
+      // 현재 사용자가 로그인한 경우
+      if (currentUser.data.user) {
+        // 사용자 email 가져오기
+        const userEmail = currentUser.data.user?.email;
 
-          // 사용자 정보 설정
-          setUser({
-            email: userEmail, // 이메일 등 다른 정보도 가져올 수 있음
-          });
-        } else {
-          // 로그인하지 않은 경우
-          setUser(null);
-          if (pathname.includes('/user')) {
-            router.push('/');
-            router.refresh();
-          }
+        // 사용자 정보 설정
+        setUser({
+          email: userEmail, // 이메일 등 다른 정보도 가져올 수 있음
+        });
+      } else {
+        // 로그인하지 않은 경우
+        setUser(null);
+        if (pathname.includes('/user')) {
+          router.push('/');
+          router.refresh();
         }
-      } catch (error) {
-        console.error('Error fetching user data:', error);
       }
-    };
-
+    } catch (error) {
+      console.error('Error fetching user data:', error);
+    }
+  };
+  useEffect(() => {
     // 페이지 로드 시 사용자 정보 가져오기
     fetchUserData();
   }, []);

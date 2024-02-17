@@ -34,7 +34,11 @@ const CanvasPreview = ({
     <div className="flex flex-col items-center justify-center">
       <PhoneBackground>
         <PhoneHeader backgroundColor={screens[0].bgColor || ''} />
-        <PhoneDisplay backgroundColor={screens[0].bgColor || ''} main={undefined}>
+        <PhoneDisplay
+          backgroundColor={screens[0].bgColor || ''}
+          main={undefined}
+          onClick={undefined}
+        >
           <div className="absolute ">
             {JSON.parse(
               screens.find((screen) => screen.id === selectedScreenData.id)?.elements || '[]',

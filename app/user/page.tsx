@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { supabase } from '@/lib/subabase/initSupabase';
+import { supabase } from '@/lib/supabase/initSupabase';
 
 import { toast } from 'react-toastify';
 

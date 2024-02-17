@@ -18,9 +18,11 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
-import { supabase } from '@/lib/supabase/initSupabase';
+
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/navigation';
+
+import { supabase } from '@/lib/supabase/initSupabase';
 
 const schema = z.object({
   email: z.string().email({ message: '유효하지 않은 이메일 형식입니다.' }),
@@ -34,8 +36,8 @@ const schema = z.object({
 const AuthSignInPage = () => {
   const [errorMessage, setErrorMessage] = React.useState('');
   const [isSubmit, setIsSubmit] = React.useState(false);
-
   const router = useRouter();
+
   const form = useForm<z.infer<typeof schema>>({
     resolver: zodResolver(schema),
   });
@@ -43,18 +45,19 @@ const AuthSignInPage = () => {
   async function onSubmit(values: z.infer<typeof schema>) {
     try {
       setIsSubmit(true);
+
       const { data, error } = await supabase.auth.signInWithPassword({
         email: values.email,
         password: values.pw,
       });
       if (error) {
-        setErrorMessage('유효하지 않은 로그인입니다. 아이디와 비밀번호를 다시 확인해 주세요.');
-        return;
+        throw Error('ERROR');
       }
       router.push('/');
       router.refresh();
-      toast.success(data.user?.email + '님 반갑습니다.');
+      toast.success(data.user.email + '님 반갑습니다.');
     } catch (error) {
+      setErrorMessage('유효하지 않은 로그인입니다. 아이디와 비밀번호를 다시 확인해 주세요.');
     } finally {
       setIsSubmit(false);
     }
