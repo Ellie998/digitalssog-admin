@@ -1,4 +1,4 @@
-import { Guide, PrismaClient, Screen, Template } from '@prisma/client/edge';
+import { Guide, Method, PrismaClient, Screen, Template } from '@prisma/client/edge';
 
 declare global {
   // eslint-disable-next-line no-var
@@ -98,3 +98,30 @@ export type targetDataType = {
   height: string;
   zIndex: string;
 };
+
+export type GuideWithGuideComponent =
+  | (Guide & {
+      guide_component: {
+        id: string;
+        code: string | null;
+        created_at: Date;
+        updated_at: Date;
+        guideId: string | null;
+      } | null;
+    })
+  | null;
+export type MethodWithGuide =
+  | (
+      | (Method & {
+          guides: {
+            id: string;
+            description: string;
+            order: number | null;
+            created_at: Date;
+            updated_at: Date;
+            methodId: string | null;
+          }[];
+        })
+      | null
+    )
+  | null;
