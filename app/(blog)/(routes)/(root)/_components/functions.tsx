@@ -1,7 +1,7 @@
-import { db } from "@/lib/db";
-import Link from "next/link";
-import { Suspense } from "react";
-import { TbLoaderQuarter } from "react-icons/tb";
+import { db } from '@/lib/db';
+// import Link from 'next/link';
+import { Suspense } from 'react';
+import { TbLoaderQuarter } from 'react-icons/tb';
 const Loading = () => {
   return (
     <div className="flex flex-col items-center justify-center w-full h-full transition-all ">
@@ -21,7 +21,7 @@ const Functions = async ({
   const functions = await db.function.findMany({
     where: {
       category: {
-        name: searchParams.tab ? searchParams.tab : "hot(인기)",
+        name: searchParams.tab ? searchParams.tab : 'hot(인기)',
       },
     },
   });
@@ -33,12 +33,12 @@ const Functions = async ({
         {functions && (
           <ul className="flex flex-col text-left gap-y-5">
             {functions?.map((item) => (
-              <li
-                key={item.id}
-                className="flex border-b-[0.5px] border-slate-300 ">
-                <Link href={`/description/${item.title.replaceAll(" ", "-")}`}>
+              <li key={item.id} className="flex border-b-[0.5px] border-slate-300 ">
+                <a href={`/description/${item.title.replaceAll(' ', '-')}`}>
+                  {/* <Link href={`/description/${item.title.replaceAll(" ", "-")}`}> */}
                   {item.title}
-                </Link>
+                  {/* </Link> */}
+                </a>
               </li>
             ))}
           </ul>

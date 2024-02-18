@@ -17,11 +17,12 @@ model App {
   icon String? 
   version String? 
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
 
   functions AppsOnFunctions[]
   methods Method[]
+  
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
 }
 
 model Function {
@@ -84,30 +85,35 @@ model Guide {
   description String 
   order Int?
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
 
   methodId String?
   method Method? @relation(fields: [methodId],references: [id])
 
   guide_component Guide_component?  
   
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
   @@index([methodId])
 }
 
 model Guide_component {
   id String @id @default(uuid())
-  code String? @db.Text
 
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
+	targetBox String?
+
 
   guideId String? @unique
   guide Guide? @relation(fields: [guideId],references: [id])
 
-  @@index([guideId])
-}
+  screenId String? 
+  screen Screen? @relation(fields: [screenId],references: [id])
 
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  @@index([guideId])
+  @@index([screenId])
+}
 
 
 model Function_category {
@@ -121,3 +127,37 @@ model Function_category {
 
 
 
+//
+model Screen {
+	id String @id @default(uuid()) @unique
+	name String?
+	bgColor String? 
+	elements String? @db.LongText
+
+
+	guide_components Guide_component[]
+
+	// template_appName String? @unique
+	// template_version String? 
+	// template_phoneName String?
+	// phoneName String?
+  template_id String? 
+  template Template? @relation(fields: [template_id],references: [id])
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  @@index([template_id])
+}
+model Template {
+	id String @id @default(uuid()) @unique
+	appName String?
+  version String?
+	phoneName String?
+  main_color String?
+  sub_color String?
+	
+	screens Screen[]
+	
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
