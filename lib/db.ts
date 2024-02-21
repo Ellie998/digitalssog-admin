@@ -71,9 +71,10 @@ export type elementDataType = {
   type: string;
   content: string;
   style: elementStyleType;
+  onClick?: { id: string; type: string; event: string };
+  className: string;
   id: string;
 };
-
 export type elementStyleType = {
   fontSize: string;
   textAlign: string;
