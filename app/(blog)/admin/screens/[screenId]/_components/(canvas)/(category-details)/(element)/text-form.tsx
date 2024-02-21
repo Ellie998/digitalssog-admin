@@ -15,6 +15,7 @@ import { elementDatasState, selectedElementState } from '../../canvas-atom';
 import { Input } from '@/components/ui/input';
 import { useEffect } from 'react';
 import { useElementDataManipulation } from '../../canvas-libs';
+import { Textarea } from '@/components/ui/textarea';
 
 const types = [
   { label: 'Text', value: 'text' },
@@ -188,7 +189,7 @@ const TextForm = () => {
       },
     },
     { name: 'onClickId', label: 'onClick target Id', type: 'text' },
-    { name: 'onClickEvent', label: 'onClick Event', type: 'text' },
+    // { name: 'onClickEvent', label: 'onClick Event', type: 'text' },
   ];
 
   useEffect(() => {
@@ -233,6 +234,10 @@ const TextForm = () => {
         selectedElementInfo?.onClick?.type || form.getValues().onClickType,
       );
       form.setValue('onClickId', selectedElementInfo?.onClick?.id || form.getValues().onClickId);
+      form.setValue(
+        'onClickEvent',
+        selectedElementInfo?.onClick?.event || form.getValues().onClickEvent,
+      );
     }
   }, [elementDatas, selectedElement]);
 
@@ -412,23 +417,35 @@ const TextForm = () => {
             />
           ))}
         </div>
-        <div className="grid grid-cols-1 gap-x-2 gap-y-4">
-          {onClickFormContent.map((item, i) => (
+        <div className="grid grid-cols-1 gap-y-4">
+          <>
+            {onClickFormContent.map((item, i) => (
+              <FormField
+                key={item.name + i}
+                control={form.control}
+                // @ts-expect-error: textAlign 할당 타입 문제
+                name={item.name}
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="mr-4">{item.label}</FormLabel>
+                    <Input type={item.type} {...field} {...item.inputAttrybuttes} />
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            ))}
             <FormField
-              className={item.name === 'onClickType' && 'col-start-1 col-end-3'}
-              key={item.name + i}
               control={form.control}
-              // @ts-expect-error: textAlign 할당 타입 문제
-              name={item.name}
+              name={'onClickEvent'}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="mr-4">{item.label}</FormLabel>
-                  <Input type={item.type} {...field} {...item.inputAttrybuttes} />
+                  <FormLabel className="mr-4">onClick Event</FormLabel>
+                  <Textarea {...field} />
                   <FormMessage />
                 </FormItem>
               )}
             />
-          ))}
+          </>
         </div>
       </div>
     </>
