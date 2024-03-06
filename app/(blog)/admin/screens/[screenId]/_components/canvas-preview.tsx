@@ -111,6 +111,7 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
                 className={cn(
                   'cursor-pointer w-fit h-fit absolute',
                   selectedElement === `${data.id}` && 'border-2 border-blue-400 ',
+                  data.className,
                 )}
                 draggable
                 onDragEnd={(e) => {
@@ -119,6 +120,7 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
                     type: data.type,
                     content: data.content,
                     onClick: data.onClick,
+                    className: data.className,
                     style: {
                       ...data.style,
                       top: `${Number(data.style.top.replace('px', '')) + e.nativeEvent.offsetY}px`,
@@ -138,10 +140,23 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
                 {data.type === 'icon' && (
                   <Icon
                     style={{ ...data.style }}
-                    id={undefined}
+                    id={data.id}
                     name={data.content || 'circle'}
-                    className={undefined}
-                    onClick={undefined}
+                    className={data.className}
+                    onClick={
+                      data.onClick?.event !== ''
+                        ? () => {
+                            const element = document.getElementById(data.onClick?.id || data.id);
+                            if (data.onClick?.type === 'hide') element?.classList.add('hidden');
+                            if (data.onClick?.type === 'show') element?.classList.remove('hidden');
+                            if (data.onClick?.type === 'add') {
+                              element ? (element.textContent += data.onClick.event) : null;
+                            } else {
+                              new Function(data.onClick?.event || '')();
+                            }
+                          }
+                        : () => {}
+                    }
                   />
                 )}
                 {data.type === 'text' && (
@@ -150,9 +165,9 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
                     style={{ ...data.style }}
                     id={data.id}
                     name={data.content || ''}
-                    className={undefined}
+                    className={data.className}
                     onClick={
-                      data.onClick?.id
+                      data.onClick?.event !== ''
                         ? () => {
                             const element = document.getElementById(data.onClick?.id || data.id);
                             if (data.onClick?.type === 'hide') element?.classList.add('hidden');
@@ -160,7 +175,7 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
                             if (data.onClick?.type === 'add') {
                               element ? (element.textContent += data.onClick.event) : null;
                             } else {
-                              element ? new Function(data.onClick?.event || '')() : null;
+                              new Function(data.onClick?.event || '')();
                             }
                           }
                         : () => {}
