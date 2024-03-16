@@ -1,4 +1,6 @@
 ## 개요
+### url
+https://digitalssog-admin.vercel.app/
 
 ### 프로젝트 목적
 
@@ -8,6 +10,13 @@
 ### 목표
 
 - 디지털쏙 페이지에 필요한 정보를 빠르고 편리하게 생성할 수 있도록 한다.
+### 미리보기
+- 화면(screen) 생성 form 사용 미리보기
+     ![makeTextElement](https://github.com/Ellie998/digitalssog-admin/assets/89681100/1338e410-659a-4165-8437-14b29a33df50)
+
+- 여러 화면(screen) 정보를 포함하는 template table 사용 미리보기
+  ![howtousetable](https://github.com/Ellie998/digitalssog-admin/assets/89681100/3b9b702b-982c-401a-acef-53c857dd8909)
+    
 
 ### 사용 라이브러리
 
@@ -28,33 +37,32 @@
   - react-toastify 9.1.3
 - 데이터베이스
   - prisma/client 5.11.0
+- 인증
   - supabase 2.39.3
 - 상태관리
   - recoil 0.7.7
 
 ## 기능
+![기능설명체험영상](https://github.com/Ellie998/digitalssog-admin/assets/89681100/3bfc40b1-c0ad-4f3d-b2a2-15a459583609)
+1. 기능 설명 정보들을 만들기 위한 form을 제공한다.
+2. 기능 설명 정보의 동작을 직접 체험해볼 수 있는 기기 화면(preview)을 만들기 위한 form을 제공한다. 
 
 ### 용어 정리
 
-- 기능 설명
+1. 기능 설명
 
   - <img width="200" alt="스크린샷 2024-03-15 오후 8 22 18" src="https://github.com/Ellie998/digitalSSOG-next/assets/89681100/68ff99b1-5036-40f7-b041-0b0a8e931ba7">
 
-  - 기능을 사용하기 위한 순차적인 방법을 나열해놓은 것
+  - 기능을 사용하기 위한 방법을 순서에 맞게 나열해놓은 것
   - 설명을 누르면 그 설명에 해당하는 기기화면을 보여준다.
 
-- 기기 화면
-
+2. 기기 화면 (preview)
   - <img width="200" alt="스크린샷 2024-03-15 오후 8 22 40" src="https://github.com/Ellie998/digitalSSOG-next/assets/89681100/72040163-f919-4164-be37-43b14d6afd88">
 
   - 기능 설명에 해당하는 기기 화면이다.
   - 실제 기기와 동일하게 동작한다.
   - 기기 화면에서 타겟을 누르면 다음 설명 화면으로 넘어간다.
 
-### 제공 중인 기능
-
-- 기능 description 생성
-- description을 구성하는 method 생성
 
 ### 사이트 구조
 
