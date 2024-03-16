@@ -14,6 +14,7 @@ import { selectedScreenDataState, targetDataState } from '../canvas-atom';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { GuideWithGuideComponentWithScreenElements, targetDataType } from '@/lib/db';
+import { checkAdmin } from '@/utils/checkAdmin';
 
 const formSchema = z.object({
   top: z.string(),
@@ -58,6 +59,12 @@ const DetailTargetElement = ({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsSubmited(true);
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       const response = await fetch(`/api/guide-components/${guide?.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },

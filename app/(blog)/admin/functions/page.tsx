@@ -1,4 +1,4 @@
-import FunctionForm from "./_components/function_form";
+import FunctionForm from './_components/function_form';
 
 const FunctionsPage = async () => {
   return (

@@ -1,11 +1,11 @@
-"use client";
-import * as React from "react";
+'use client';
+import * as React from 'react';
 
-import Box from "@mui/material/Box";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import SaveIcon from "@mui/icons-material/Save";
-import CancelIcon from "@mui/icons-material/Close";
+import Box from '@mui/material/Box';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Close';
 
 import {
   GridRowsProp,
@@ -19,19 +19,18 @@ import {
   GridRowId,
   GridRowModel,
   GridRowEditStopReasons,
-} from "@mui/x-data-grid";
-import { randomId } from "@mui/x-data-grid-generator";
-import { Button } from "@/components/ui/button";
-import { toast } from "react-toastify";
-import { BsArrowsAngleExpand } from "react-icons/bs";
-import Link from "next/link";
-import { encodeUrl } from "@/lib/utils";
+} from '@mui/x-data-grid';
+import { randomId } from '@mui/x-data-grid-generator';
+import { Button } from '@/components/ui/button';
+import { toast } from 'react-toastify';
+import { BsArrowsAngleExpand } from 'react-icons/bs';
+import Link from 'next/link';
+import { encodeUrl } from '@/lib/utils';
+import { checkAdmin } from '@/utils/checkAdmin';
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-  setRowModesModel: (
-    newModel: (oldModel: GridRowModesModel) => GridRowModesModel
-  ) => void;
+  setRowModesModel: (newModel: (oldModel: GridRowModesModel) => GridRowModesModel) => void;
 }
 
 function EditToolbar(props: EditToolbarProps) {
@@ -43,18 +42,20 @@ function EditToolbar(props: EditToolbarProps) {
       ...oldRows,
       {
         id,
-        categoryName: "",
-        title: "",
-        icon: "",
-        description: "",
+        categoryName: '',
+        title: '',
+        icon: '',
+        description: '',
         methodLength: 0,
         isNew: true,
       },
     ]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: "title" },
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'title' },
     }));
+    try {
+    } catch (error) {}
   };
 
   return (
@@ -88,14 +89,9 @@ export default function FunctionTable({
   }));
 
   const [rows, setRows] = React.useState(initialRows);
-  const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
-    {}
-  );
+  const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
 
-  const handleRowEditStop: GridEventListener<"rowEditStop"> = (
-    params,
-    event
-  ) => {
+  const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
       event.defaultMuiPrevented = true;
     }
@@ -110,25 +106,28 @@ export default function FunctionTable({
   };
 
   const handleDeleteClick = (id: GridRowId) => async () => {
-    const text = "확인 버튼을 누르면 선택한 function 목록이 삭제됩니다. ";
+    const text = '확인 버튼을 누르면 선택한 function 목록이 삭제됩니다. ';
     if (confirm(text) == true) {
       setRows(rows.filter((row) => row.id !== id));
       const functionName = rows.find((row) => row.id === id);
 
       try {
-        const response = await fetch(
-          `/api/functions/${encodeUrl(functionName?.title)}`,
-          {
-            method: "DELETE",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              id: id,
-            }),
-          }
-        );
+        const isAdmin = await checkAdmin();
+        if (!isAdmin) {
+          toast.error('Not Allowed!');
+          return;
+        }
+
+        const response = await fetch(`/api/functions/${encodeUrl(functionName?.title)}`, {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: id,
+          }),
+        });
         if (!response.ok) {
-          toast.error("ERROR!");
-          throw Error("FAIL : FUNCTION TABLE");
+          toast.error('ERROR!');
+          throw Error('FAIL : FUNCTION TABLE');
         }
 
         toast.success(`[${functionName?.title}] function 삭제 성공`);
@@ -156,10 +155,17 @@ export default function FunctionTable({
     const functionName = rows.find((row) => row.id === newRow.id);
 
     try {
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       if (newRow.isNew) {
+        // const token = session.data.session?.access_token;
         const response = await fetch(`/api/functions`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             id: newRow.id,
             categoryName: newRow?.categoryName,
@@ -169,29 +175,26 @@ export default function FunctionTable({
           }),
         });
         if (!response.ok) {
-          toast.error("ERROR!");
-          throw Error("FAIL : FUNCTION TABLE");
+          toast.error('ERROR!');
+          throw Error('FAIL : FUNCTION TABLE');
         }
 
         toast.success(`[${newRow.title}] function 저장 성공`);
       } else {
-        const response = await fetch(
-          `/api/functions/${encodeUrl(functionName?.title)}`,
-          {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              id: newRow.id,
-              categoryName: newRow?.categoryName,
-              title: newRow?.title,
-              icon: newRow?.icon,
-              description: newRow?.description,
-            }),
-          }
-        );
+        const response = await fetch(`/api/functions/${encodeUrl(functionName?.title)}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            id: newRow.id,
+            categoryName: newRow?.categoryName,
+            title: newRow?.title,
+            icon: newRow?.icon,
+            description: newRow?.description,
+          }),
+        });
         if (!response.ok) {
-          toast.error("ERROR!");
-          throw Error("FAIL : FUNCTION TABLE");
+          toast.error('ERROR!');
+          throw Error('FAIL : FUNCTION TABLE');
         }
 
         toast.success(`[${newRow.title}] function 업데이트 성공`);
@@ -209,53 +212,53 @@ export default function FunctionTable({
 
   const columns: GridColDef[] = [
     {
-      field: "categoryName",
-      headerName: "Category Name",
+      field: 'categoryName',
+      headerName: 'Category Name',
       width: 150,
       editable: true,
-      align: "center",
-      headerAlign: "center",
+      align: 'center',
+      headerAlign: 'center',
     },
     {
-      field: "title",
-      headerName: "Title",
+      field: 'title',
+      headerName: 'Title',
       width: 200,
       editable: true,
-      align: "left",
-      headerAlign: "left",
+      align: 'left',
+      headerAlign: 'left',
     },
     {
-      field: "icon",
-      headerName: "Icon",
+      field: 'icon',
+      headerName: 'Icon',
       width: 70,
       editable: true,
-      align: "left",
-      headerAlign: "left",
+      align: 'left',
+      headerAlign: 'left',
     },
 
     {
-      field: "description",
-      headerName: "Description",
+      field: 'description',
+      headerName: 'Description',
       width: 300,
-      align: "left",
-      headerAlign: "left",
+      align: 'left',
+      headerAlign: 'left',
       editable: true,
     },
     {
-      field: "methodLength",
-      headerName: "Method Length",
+      field: 'methodLength',
+      headerName: 'Method Length',
       width: 100,
-      align: "center",
-      headerAlign: "center",
+      align: 'center',
+      headerAlign: 'center',
       editable: false,
     },
 
     {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
       width: 100,
-      cellClassName: "actions",
+      cellClassName: 'actions',
       getActions: ({ id, row }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
         if (isInEditMode) {
@@ -264,7 +267,7 @@ export default function FunctionTable({
               icon={<SaveIcon />}
               label="Save"
               sx={{
-                color: "primary.main",
+                color: 'primary.main',
               }}
               onClick={handleSaveClick(id)}
             />,
@@ -316,14 +319,15 @@ export default function FunctionTable({
     <Box
       sx={{
         height: 700,
-        width: "100%",
-        "& .actions": {
-          color: "text.secondary",
+        width: '100%',
+        '& .actions': {
+          color: 'text.secondary',
         },
-        "& .textPrimary": {
-          color: "text.primary",
+        '& .textPrimary': {
+          color: 'text.primary',
         },
-      }}>
+      }}
+    >
       <DataGrid
         pageSizeOptions={[10, 20, 30, 40, 50, 60, 70, 80, 90, 100]}
         initialState={{

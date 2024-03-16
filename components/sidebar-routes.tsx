@@ -19,7 +19,7 @@ const SidebarRoutes = () => {
 
   return (
     <div className="flex flex-col w-full pl-6">
-      {data?.email === 'dpfla9144@naver.com' ? (
+      {true || data?.email === 'dpfla9144@naver.com' ? (
         <>
           <Link href={'/admin'}>admin 메인</Link>
           <Link href={'/admin/functions'}>function 메인</Link>

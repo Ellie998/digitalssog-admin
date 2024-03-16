@@ -1,9 +1,11 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { Guide } from "@prisma/client";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+'use client';
+import { Button } from '@/components/ui/button';
+import { checkAdmin } from '@/utils/checkAdmin';
+import { Guide } from '@prisma/client';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const GuideComponentButton = ({
   guide,
@@ -17,16 +19,22 @@ const GuideComponentButton = ({
   async function onClickHandler() {
     try {
       setIsClicked(true);
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       const response = await fetch(`/api/guide-components`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           guideId: guide?.id,
-          code: "",
+          code: '',
         }),
       });
       if (!response.ok) {
-        throw Error("FAIL : GUIDE COMPONENT CREATE");
+        throw Error('FAIL : GUIDE COMPONENT CREATE');
       }
       const data = await response.json();
       router.push(`/admin/guide-components/${data.id}`);
@@ -40,14 +48,11 @@ const GuideComponentButton = ({
   return (
     <>
       {guide_component_id === null ? (
-        <Button
-          variant={"default"}
-          onClick={() => onClickHandler()}
-          disabled={isClicked}>
+        <Button variant={'default'} onClick={() => onClickHandler()} disabled={isClicked}>
           Go To Make Guide Component
         </Button>
       ) : (
-        <Button variant={"secondary"}>
+        <Button variant={'secondary'}>
           <Link href={`/admin/guide-components/${guide_component_id}`}>
             Go To Edit Guide Component
           </Link>

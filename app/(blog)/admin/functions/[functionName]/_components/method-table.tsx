@@ -25,6 +25,7 @@ import { toast } from 'react-toastify';
 import { BsArrowsAngleExpand } from 'react-icons/bs';
 import Link from 'next/link';
 import { encodeUrl } from '@/lib/utils';
+import { checkAdmin } from '@/utils/checkAdmin';
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -107,6 +108,12 @@ export default function MethodTable({
       setRows(rows.filter((row) => row.id !== id));
 
       try {
+        const isAdmin = await checkAdmin();
+        if (!isAdmin) {
+          toast.error('Not Allowed!');
+          return;
+        }
+
         const response = await fetch(`/api/methods/${id}`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
@@ -143,6 +150,12 @@ export default function MethodTable({
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
 
     try {
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       if (newRow.isNew) {
         const response = await fetch(`/api/methods`, {
           method: 'POST',

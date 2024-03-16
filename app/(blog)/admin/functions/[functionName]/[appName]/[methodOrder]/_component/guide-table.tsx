@@ -1,11 +1,11 @@
-"use client";
+'use client';
 
-import * as React from "react";
-import Box from "@mui/material/Box";
-import EditIcon from "@mui/icons-material/Edit";
-import DeleteIcon from "@mui/icons-material/DeleteOutlined";
-import SaveIcon from "@mui/icons-material/Save";
-import CancelIcon from "@mui/icons-material/Close";
+import * as React from 'react';
+import Box from '@mui/material/Box';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/DeleteOutlined';
+import SaveIcon from '@mui/icons-material/Save';
+import CancelIcon from '@mui/icons-material/Close';
 import {
   GridRowsProp,
   GridRowModesModel,
@@ -18,19 +18,18 @@ import {
   GridRowId,
   GridRowModel,
   GridRowEditStopReasons,
-} from "@mui/x-data-grid";
-import { randomId } from "@mui/x-data-grid-generator";
-import { Guide } from "@prisma/client";
-import { Button } from "@/components/ui/button";
-import { toast } from "react-toastify";
-import { BsArrowsAngleExpand } from "react-icons/bs";
-import Link from "next/link";
+} from '@mui/x-data-grid';
+import { randomId } from '@mui/x-data-grid-generator';
+import { Guide } from '@prisma/client';
+import { Button } from '@/components/ui/button';
+import { toast } from 'react-toastify';
+import { BsArrowsAngleExpand } from 'react-icons/bs';
+import Link from 'next/link';
+import { checkAdmin } from '@/utils/checkAdmin';
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
-  setRowModesModel: (
-    newModel: (oldModel: GridRowModesModel) => GridRowModesModel
-  ) => void;
+  setRowModesModel: (newModel: (oldModel: GridRowModesModel) => GridRowModesModel) => void;
 }
 
 function EditToolbar(props: EditToolbarProps) {
@@ -38,13 +37,10 @@ function EditToolbar(props: EditToolbarProps) {
 
   const handleClick = () => {
     const id = randomId();
-    setRows((oldRows) => [
-      ...oldRows,
-      { id, order: "", description: "", isNew: true },
-    ]);
+    setRows((oldRows) => [...oldRows, { id, order: '', description: '', isNew: true }]);
     setRowModesModel((oldModel) => ({
       ...oldModel,
-      [id]: { mode: GridRowModes.Edit, fieldToFocus: "order" },
+      [id]: { mode: GridRowModes.Edit, fieldToFocus: 'order' },
     }));
   };
 
@@ -58,13 +54,7 @@ function EditToolbar(props: EditToolbarProps) {
   );
 }
 
-export default function GuideTable({
-  guides,
-  methodId,
-}: {
-  guides: Guide[];
-  methodId: string;
-}) {
+export default function GuideTable({ guides, methodId }: { guides: Guide[]; methodId: string }) {
   const initialRows: GridRowsProp = guides.map((guide) => ({
     id: guide.id,
     order: guide.order,
@@ -72,14 +62,9 @@ export default function GuideTable({
   }));
 
   const [rows, setRows] = React.useState(initialRows);
-  const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>(
-    {}
-  );
+  const [rowModesModel, setRowModesModel] = React.useState<GridRowModesModel>({});
 
-  const handleRowEditStop: GridEventListener<"rowEditStop"> = (
-    params,
-    event
-  ) => {
+  const handleRowEditStop: GridEventListener<'rowEditStop'> = (params, event) => {
     if (params.reason === GridRowEditStopReasons.rowFocusOut) {
       event.defaultMuiPrevented = true;
     }
@@ -94,24 +79,30 @@ export default function GuideTable({
   };
 
   const handleDeleteClick = (id: GridRowId) => async () => {
-    const text = "확인 버튼을 누르면 선택한 가이드 목록이 삭제됩니다. ";
+    const text = '확인 버튼을 누르면 선택한 가이드 목록이 삭제됩니다. ';
     if (confirm(text) == true) {
       setRows(rows.filter((row) => row.id !== id));
 
       try {
+        const isAdmin = await checkAdmin();
+        if (!isAdmin) {
+          toast.error('Not Allowed!');
+          return;
+        }
+
         const response = await fetch(`/api/guides/${id}`, {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             id: id,
           }),
         });
         if (!response.ok) {
-          toast.error("ERROR!");
-          throw Error("FAIL : GUIDE TABLE");
+          toast.error('ERROR!');
+          throw Error('FAIL : GUIDE TABLE');
         }
 
-        toast.success("Guide 삭제 성공");
+        toast.success('Guide 삭제 성공');
       } catch (error) {
         console.log(error);
       }
@@ -135,10 +126,16 @@ export default function GuideTable({
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
 
     try {
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       if (newRow.isNew) {
         const response = await fetch(`/api/guides`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             id: newRow.id,
             methodId: methodId,
@@ -147,15 +144,15 @@ export default function GuideTable({
           }),
         });
         if (!response.ok) {
-          toast.error("ERROR!");
-          throw Error("FAIL : GUIDE TABLE");
+          toast.error('ERROR!');
+          throw Error('FAIL : GUIDE TABLE');
         }
 
         toast.success(`Guide ${newRow.order} 저장 성공`);
       } else {
         const response = await fetch(`/api/guides/${newRow.id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             id: newRow.id,
             methodId: methodId,
@@ -164,8 +161,8 @@ export default function GuideTable({
           }),
         });
         if (!response.ok) {
-          toast.error("ERROR!");
-          throw Error("FAIL : GUIDE TABLE");
+          toast.error('ERROR!');
+          throw Error('FAIL : GUIDE TABLE');
         }
 
         toast.success(`Guide ${newRow.order} 업데이트 성공`);
@@ -183,28 +180,28 @@ export default function GuideTable({
 
   const columns: GridColDef[] = [
     {
-      field: "order",
-      headerName: "Order",
+      field: 'order',
+      headerName: 'Order',
       width: 100,
       editable: true,
-      align: "center",
-      headerAlign: "center",
+      align: 'center',
+      headerAlign: 'center',
     },
     {
-      field: "description",
-      headerName: "Description",
+      field: 'description',
+      headerName: 'Description',
       width: 500,
-      align: "left",
-      headerAlign: "left",
+      align: 'left',
+      headerAlign: 'left',
       editable: true,
     },
 
     {
-      field: "actions",
-      type: "actions",
-      headerName: "Actions",
+      field: 'actions',
+      type: 'actions',
+      headerName: 'Actions',
       width: 100,
-      cellClassName: "actions",
+      cellClassName: 'actions',
       getActions: ({ id }) => {
         const isInEditMode = rowModesModel[id]?.mode === GridRowModes.Edit;
         if (isInEditMode) {
@@ -213,7 +210,7 @@ export default function GuideTable({
               icon={<SaveIcon />}
               label="Save"
               sx={{
-                color: "primary.main",
+                color: 'primary.main',
               }}
               onClick={handleSaveClick(id)}
             />,
@@ -265,14 +262,15 @@ export default function GuideTable({
     <Box
       sx={{
         height: 500,
-        width: "100%",
-        "& .actions": {
-          color: "text.secondary",
+        width: '100%',
+        '& .actions': {
+          color: 'text.secondary',
         },
-        "& .textPrimary": {
-          color: "text.primary",
+        '& .textPrimary': {
+          color: 'text.primary',
         },
-      }}>
+      }}
+    >
       <DataGrid
         rows={rows}
         columns={columns}

@@ -1,37 +1,28 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
 
-import { Function_category } from "@prisma/client";
-import { toast } from "react-toastify";
+import { Function_category } from '@prisma/client';
+import { toast } from 'react-toastify';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
 
-import { cn } from "@/lib/utils";
+import { cn } from '@/lib/utils';
 
-import { BsCheck, BsChevronExpand } from "react-icons/bs";
-import { Button } from "@/components/ui/button";
+import { BsCheck, BsChevronExpand } from 'react-icons/bs';
+import { Button } from '@/components/ui/button';
 import {
   Command,
   CommandEmpty,
   CommandGroup,
   CommandInput,
   CommandItem,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
+} from '@/components/ui/command';
+import { Popover, PopoverTrigger, PopoverContent } from '@/components/ui/popover';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { checkAdmin } from '@/utils/checkAdmin';
 
 const formSchema = z.object({
   category: z.string().min(1).max(20),
@@ -61,18 +52,24 @@ const FunctionCategoryForm = ({
   async function onSubmit() {
     try {
       setIsSubmited(true);
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       const response = await fetch(`/api/functions/${functionName}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           categoryName: value,
         }),
       });
       if (!response.ok) {
-        toast.error("Fail");
-        throw Error("");
+        toast.error('Fail');
+        throw Error('');
       }
-      toast.success("카테고리 수정 성공!");
+      toast.success('카테고리 수정 성공!');
     } catch (error) {
       console.log(error);
     } finally {
@@ -86,7 +83,7 @@ const FunctionCategoryForm = ({
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name={"category"}
+            name={'category'}
             render={() => (
               <FormItem>
                 <FormLabel className="block w-full text-lg">Category</FormLabel>
@@ -94,15 +91,14 @@ const FunctionCategoryForm = ({
                   <Popover open={open} onOpenChange={setOpen}>
                     <PopoverTrigger asChild>
                       <Button
-                        variant={"outline"}
+                        variant={'outline'}
                         role="combobox"
                         aria-expanded={open}
-                        className="w-[200px] justify-between">
+                        className="w-[200px] justify-between"
+                      >
                         {value
-                          ? categories?.find(
-                              (category) => category.name === value
-                            )?.name
-                          : "Select Category..."}
+                          ? categories?.find((category) => category.name === value)?.name
+                          : 'Select Category...'}
                         <BsChevronExpand className="w-4 h-4 ml-2 opacity-50 shrink-0" />
                       </Button>
                     </PopoverTrigger>
@@ -116,17 +112,14 @@ const FunctionCategoryForm = ({
                               key={category.name}
                               value={category.name}
                               onSelect={(currentValue) => {
-                                setValue(
-                                  currentValue === value ? "" : currentValue
-                                );
+                                setValue(currentValue === value ? '' : currentValue);
                                 setOpen(false);
-                              }}>
+                              }}
+                            >
                               <BsCheck
                                 className={cn(
-                                  "mr-2 h-4 w-4",
-                                  value === category.name
-                                    ? "opacity-100"
-                                    : "opacity-0"
+                                  'mr-2 h-4 w-4',
+                                  value === category.name ? 'opacity-100' : 'opacity-0',
                                 )}
                               />
                               {category.name}
@@ -138,7 +131,8 @@ const FunctionCategoryForm = ({
                   </Popover>
                 </FormControl>
               </FormItem>
-            )}></FormField>
+            )}
+          ></FormField>
           <Button type="submit" disabled={isSubmited}>
             Edit
           </Button>

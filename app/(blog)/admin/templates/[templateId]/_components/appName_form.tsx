@@ -16,6 +16,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
+import { checkAdmin } from '@/utils/checkAdmin';
 
 const formSchema = z.object({
   appName: z.string().min(1),
@@ -34,6 +35,12 @@ const TemplateAppNameForm = ({ appName, id }: { appName: string; id: string }) =
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsSubmited(true);
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       const response = await fetch(`/api/templates/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },

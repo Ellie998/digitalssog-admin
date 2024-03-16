@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { useRouter } from "next/navigation";
+import { useRouter } from 'next/navigation';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -14,10 +14,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { toast } from "react-toastify";
-import { useState } from "react";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { toast } from 'react-toastify';
+import { useState } from 'react';
+import { checkAdmin } from '@/utils/checkAdmin';
 
 const formSchema = z.object({
   title: z.string().min(1),
@@ -37,18 +38,24 @@ const FunctionTitleForm = ({ title }: { title: string }) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsSubmited(true);
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       const response = await fetch(`/api/functions/${title}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           title: values.title,
         }),
       });
       if (!response.ok) {
-        toast.error("Fail");
-        throw Error("");
+        toast.error('Fail');
+        throw Error('');
       }
-      toast.success("title 수정 성공!");
+      toast.success('title 수정 성공!');
       router.push(`/admin/functions/${values.title}`);
       router.refresh();
     } catch (error) {
