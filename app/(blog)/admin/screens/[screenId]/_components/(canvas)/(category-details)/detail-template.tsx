@@ -18,6 +18,7 @@ import { toast } from 'react-toastify';
 import { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import { screenNameState } from '../canvas-atom';
+import { checkAdmin } from '@/utils/checkAdmin';
 
 const formSchema = z.object({
   appName: z.string().min(1),
@@ -52,6 +53,12 @@ const DetailTemplate = ({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsSubmited(true);
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       const response = await fetch(`/api/screens/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },

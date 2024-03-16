@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -13,13 +13,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 
-import Link from "next/link";
-import { decodeUrl, encodeUrl } from "@/lib/utils";
+import Link from 'next/link';
+import { decodeUrl, encodeUrl } from '@/lib/utils';
+import { checkAdmin } from '@/utils/checkAdmin';
 
 const formSchema = z.object({
   order: z.string(),
@@ -27,34 +28,33 @@ const formSchema = z.object({
   appName: z.string(),
 });
 
-const AdminMethodCreatePage = ({
-  params,
-}: {
-  params: { functionName: string };
-}) => {
+const AdminMethodCreatePage = ({ params }: { params: { functionName: string } }) => {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: { description: "", appName: "" },
+    defaultValues: { description: '', appName: '' },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      toast("DB 생성중", { autoClose: 2000 });
-      const response = await fetch(
-        `/api/functions/${encodeUrl(params.functionName)}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            order: Number(values.order),
-            description: values.description,
-            appName: values.appName,
-          }),
-        }
-      );
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
+      toast('DB 생성중', { autoClose: 2000 });
+      const response = await fetch(`/api/functions/${encodeUrl(params.functionName)}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          order: Number(values.order),
+          description: values.description,
+          appName: values.appName,
+        }),
+      });
       if (!response.ok) {
-        toast.error("ERROR!");
-        throw Error("FAIL :CREATE FUNCTION DESCRIPTION");
+        toast.error('ERROR!');
+        throw Error('FAIL :CREATE FUNCTION DESCRIPTION');
       }
 
       toast.success(() => (
@@ -62,9 +62,10 @@ const AdminMethodCreatePage = ({
           <div>Method 생성 성공</div>
           <div>
             <Link
-              href={`/admin/functions/${encodeUrl(
-                params.functionName
-              )}/${encodeUrl(values.appName)}/${values.order}`}>
+              href={`/admin/functions/${encodeUrl(params.functionName)}/${encodeUrl(
+                values.appName,
+              )}/${values.order}`}
+            >
               Go To Edit
             </Link>
           </div>
@@ -119,9 +120,7 @@ const AdminMethodCreatePage = ({
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
-                <FormDescription>
-                  해당 기능의 method가 속하는 어플 이름을 작성한다.
-                </FormDescription>
+                <FormDescription>해당 기능의 method가 속하는 어플 이름을 작성한다.</FormDescription>
                 <FormMessage />
               </FormItem>
             )}

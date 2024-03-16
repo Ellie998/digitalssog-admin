@@ -29,6 +29,8 @@ import Link from 'next/link';
 import { v4 } from 'uuid';
 import { TemplateWithScreenWithhoutGuideComId } from '@/lib/db';
 
+import { checkAdmin } from '@/utils/checkAdmin';
+
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
   setRowModesModel: (newModel: (oldModel: GridRowModesModel) => GridRowModesModel) => void;
@@ -110,6 +112,12 @@ export default function TemplateTable({ data }: { data: TemplateWithScreenWithho
     setRowModesModel((oldModel) => ({ ...oldModel, [id]: { mode: GridRowModes.View } }));
 
     try {
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       const response = await fetch(`/api/templates`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -157,6 +165,12 @@ export default function TemplateTable({ data }: { data: TemplateWithScreenWithho
       setRows(rows.filter((row) => row.id !== id));
 
       try {
+        const isAdmin = await checkAdmin();
+        if (!isAdmin) {
+          toast.error('Not Allowed!');
+          return;
+        }
+
         const response = await fetch(`/api/templates/${id}`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
@@ -203,8 +217,13 @@ export default function TemplateTable({ data }: { data: TemplateWithScreenWithho
   const processRowUpdate = async (newRow: GridRowModel) => {
     const updatedRow = { ...newRow, isNew: false };
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
-
     try {
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       if (newRow.isNew) {
         const response = await fetch(`/api/templates`, {
           method: 'POST',

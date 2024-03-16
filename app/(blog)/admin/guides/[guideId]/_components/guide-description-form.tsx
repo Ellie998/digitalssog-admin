@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -12,24 +12,19 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 
-import { toast } from "react-toastify";
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { toast } from 'react-toastify';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { checkAdmin } from '@/utils/checkAdmin';
 
 const formSchema = z.object({
   description: z.string(),
 });
 
-const GuideDescriptionForm = ({
-  id,
-  description,
-}: {
-  id: string;
-  description: string;
-}) => {
+const GuideDescriptionForm = ({ id, description }: { id: string; description: string }) => {
   const [isSubmit, setIsSubmit] = useState(false);
   const router = useRouter();
 
@@ -41,19 +36,25 @@ const GuideDescriptionForm = ({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsSubmit(true);
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       const response = await fetch(`/api/guides/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           description: values.description,
         }),
       });
       if (!response.ok) {
-        toast.error("ERROR!");
-        throw Error("FAIL : GUIDE DESCRIPTION FORM");
+        toast.error('ERROR!');
+        throw Error('FAIL : GUIDE DESCRIPTION FORM');
       }
 
-      toast.success("Guide description 수정 성공");
+      toast.success('Guide description 수정 성공');
       router.refresh();
     } catch (error) {
       console.log(error);
@@ -73,7 +74,7 @@ const GuideDescriptionForm = ({
               <FormItem>
                 <FormLabel className="text-lg">Guide Description</FormLabel>
                 <FormControl>
-                  <Input placeholder={"guide의 description 작성"} {...field} />
+                  <Input placeholder={'guide의 description 작성'} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

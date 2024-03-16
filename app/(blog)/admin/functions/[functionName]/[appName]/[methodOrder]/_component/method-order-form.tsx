@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -12,13 +12,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 
-import { toast } from "react-toastify";
-import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import { encodeUrl } from "@/lib/utils";
+import { toast } from 'react-toastify';
+import { useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
+import { encodeUrl } from '@/lib/utils';
+import { checkAdmin } from '@/utils/checkAdmin';
 
 const formSchema = z.object({
   order: z.string(),
@@ -36,25 +37,31 @@ const MethodOrderForm = ({ id, order }: { id: string; order: number }) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsSubmit(true);
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       const response = await fetch(`/api/methods/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           order: Number(values.order),
         }),
       });
       if (!response.ok) {
-        toast.error("ERROR!");
-        throw Error("FAIL : METHOD ORDER FORM");
+        toast.error('ERROR!');
+        throw Error('FAIL : METHOD ORDER FORM');
       }
 
-      toast.success("Method order 수정 성공");
-      typeof params.functionName === "string" &&
-        typeof params.appName === "string" &&
+      toast.success('Method order 수정 성공');
+      typeof params.functionName === 'string' &&
+        typeof params.appName === 'string' &&
         router.push(
-          `/admin/functions/${encodeUrl(params.functionName)}/${encodeUrl(
-            params.appName
-          )}/${values.order}`
+          `/admin/functions/${encodeUrl(params.functionName)}/${encodeUrl(params.appName)}/${
+            values.order
+          }`,
         );
       router.refresh();
     } catch (error) {
@@ -75,12 +82,7 @@ const MethodOrderForm = ({ id, order }: { id: string; order: number }) => {
               <FormItem>
                 <FormLabel className="text-lg">Method Order</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder={String(order)}
-                    {...field}
-                    type="number"
-                    min={0}
-                  />
+                  <Input placeholder={String(order)} {...field} type="number" min={0} />
                 </FormControl>
 
                 <FormMessage />

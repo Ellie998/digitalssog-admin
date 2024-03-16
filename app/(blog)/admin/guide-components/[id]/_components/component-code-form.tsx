@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -12,11 +12,12 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 
-import { toast } from "react-toastify";
-import { useState } from "react";
+import { toast } from 'react-toastify';
+import { useState } from 'react';
+import { checkAdmin } from '@/utils/checkAdmin';
 
 const formSchema = z.object({
   code: z.string(),
@@ -33,19 +34,25 @@ const ComponentCodeForm = ({ id, code }: { id: string; code: string }) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsSubmit(true);
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       const response = await fetch(`/api/guide-components/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           code: values.code,
         }),
       });
       if (!response.ok) {
-        toast.error("ERROR!");
-        throw Error("FAIL : GUIDE COMPONENT CODE FORM");
+        toast.error('ERROR!');
+        throw Error('FAIL : GUIDE COMPONENT CODE FORM');
       }
 
-      toast.success("Guide code 수정 성공");
+      toast.success('Guide code 수정 성공');
     } catch (error) {
       console.log(error);
     } finally {
@@ -64,10 +71,7 @@ const ComponentCodeForm = ({ id, code }: { id: string; code: string }) => {
               <FormItem>
                 <FormLabel className="text-lg">Guide Component Code</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder={"guide component의 code 작성"}
-                    {...field}
-                  />
+                  <Input placeholder={'guide component의 code 작성'} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

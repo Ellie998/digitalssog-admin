@@ -31,6 +31,7 @@ import {
 } from '@/components/ui/alert-dialog';
 import { toast } from 'react-toastify';
 import { ScreenWithAllTemplate } from '@/lib/db';
+import { checkAdmin } from '@/utils/checkAdmin';
 
 const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
   const [isSubmit, setIsSubmit] = useState(false);
@@ -67,6 +68,12 @@ const CanvasPreview = ({ data }: { data?: ScreenWithAllTemplate | null }) => {
   async function onSubmit() {
     try {
       setIsSubmit(true);
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       const response = await fetch(`/api/screens/${data?.id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },

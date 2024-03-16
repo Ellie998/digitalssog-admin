@@ -53,6 +53,11 @@ const AuthSignInPage = () => {
       if (error) {
         throw Error('ERROR');
       }
+      const session = await supabase.auth.setSession(data.session);
+      if (session.error) {
+        throw Error('ERROR');
+      }
+
       router.push('/');
       router.refresh();
       toast.success(data.user.email + '님 반갑습니다.');
