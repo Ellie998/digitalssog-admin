@@ -27,6 +27,7 @@ import { BsArrowsAngleExpand, BsCopy } from 'react-icons/bs';
 import Link from 'next/link';
 
 import { ScreenWithTemplate } from '@/lib/db';
+import { checkAdmin } from '@/utils/checkAdmin';
 
 interface EditToolbarProps {
   setRows: (newRows: (oldRows: GridRowsProp) => GridRowsProp) => void;
@@ -107,6 +108,12 @@ export default function ScreenTable({
     setRowModesModel((oldModel) => ({ ...oldModel, [id]: { mode: GridRowModes.View } }));
 
     try {
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       const response = await fetch(`/api/screens`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -137,6 +144,12 @@ export default function ScreenTable({
       toast.success(`[${id}] Screen 삭제 성공`);
 
       try {
+        const isAdmin = await checkAdmin();
+        if (!isAdmin) {
+          toast.error('Not Allowed!');
+          return;
+        }
+
         const response = await fetch(`/api/screens/${id}`, {
           method: 'DELETE',
           headers: { 'Content-Type': 'application/json' },
@@ -173,6 +186,12 @@ export default function ScreenTable({
     setRows(rows.map((row) => (row.id === newRow.id ? updatedRow : row)));
 
     try {
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       if (newRow.isNew) {
         const response = await fetch(`/api/screens`, {
           method: 'POST',

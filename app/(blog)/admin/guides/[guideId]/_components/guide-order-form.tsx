@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import * as z from 'zod';
 
-import { Button } from "@/components/ui/button";
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -12,23 +12,18 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 
-import { toast } from "react-toastify";
-import { useState } from "react";
+import { toast } from 'react-toastify';
+import { useState } from 'react';
+import { checkAdmin } from '@/utils/checkAdmin';
 
 const formSchema = z.object({
   order: z.string(),
 });
 
-const GuideOrderForm = ({
-  id,
-  order,
-}: {
-  id: string;
-  order: number | null;
-}) => {
+const GuideOrderForm = ({ id, order }: { id: string; order: number | null }) => {
   const [isSubmit, setIsSubmit] = useState(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -39,19 +34,25 @@ const GuideOrderForm = ({
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsSubmit(true);
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       const response = await fetch(`/api/guides/${id}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           order: Number(values.order),
         }),
       });
       if (!response.ok) {
-        toast.error("ERROR!");
-        throw Error("FAIL : GUIDE ORDER FORM");
+        toast.error('ERROR!');
+        throw Error('FAIL : GUIDE ORDER FORM');
       }
 
-      toast.success("Guide order 수정 성공");
+      toast.success('Guide order 수정 성공');
     } catch (error) {
       console.log(error);
     } finally {
@@ -70,12 +71,7 @@ const GuideOrderForm = ({
               <FormItem>
                 <FormLabel className="text-lg">Guide Order</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder={String(order)}
-                    {...field}
-                    type="number"
-                    min={0}
-                  />
+                  <Input placeholder={String(order)} {...field} type="number" min={0} />
                 </FormControl>
 
                 <FormMessage />

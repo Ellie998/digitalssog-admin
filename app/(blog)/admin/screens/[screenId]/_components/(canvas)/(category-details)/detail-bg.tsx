@@ -22,6 +22,7 @@ import { bgColorState } from '../canvas-atom';
 import { toast } from 'react-toastify';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import { checkAdmin } from '@/utils/checkAdmin';
 
 const formSchema = z.object({
   bgColor: z.string(),
@@ -39,6 +40,12 @@ const DetailBg = ({ id, bgColor }: { id: string; bgColor: string }) => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       setIsSubmit(true);
+      const isAdmin = await checkAdmin();
+      if (!isAdmin) {
+        toast.error('Not Allowed!');
+        return;
+      }
+
       const response = await fetch(`/api/screens/${id}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
