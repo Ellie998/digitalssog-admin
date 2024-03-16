@@ -1,71 +1,119 @@
-# Getting Started with Create React App
+## 개요
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### 프로젝트 목적
 
-## Available Scripts
+- 디지털 기기를 사용하는 방법에 대한 정보 생성 기능을 제공하여 컨텐츠 생성의 편의성을 제공한다.
+- 기기의 미리보기 화면에 대한 정보 생성 기능을 제공하여 컨텐츠 생성의 편의성을 제공한다.
 
-In the project directory, you can run:
+### 목표
 
-### `npm start`
+- 디지털쏙 페이지에 필요한 정보를 빠르고 편리하게 생성할 수 있도록 한다.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### 사용 라이브러리
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- 프레임워크
+  - next 13.4.8 (app router)
+  - react 18.2.0
+  - react-dom 18.2.0
+- 스타일
+  - tailwind
+  - mui
+  - shadcn-ui
+  - bootstrap-icons 1.10.5
+  - react-icons 4.12.0
+- form
+  - react-hook-form 7.48.2
+  - zod 3.22.4
+  - uuid 9.0.1
+  - react-toastify 9.1.3
+- 데이터베이스
+  - prisma/client 5.11.0
+  - supabase 2.39.3
+- 상태관리
+  - recoil 0.7.7
 
-### `npm test`
+## 기능
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 용어 정리
 
-### `npm run build`
+- 기능 설명
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+  - <img width="200" alt="스크린샷 2024-03-15 오후 8 22 18" src="https://github.com/Ellie998/digitalSSOG-next/assets/89681100/68ff99b1-5036-40f7-b041-0b0a8e931ba7">
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+  - 기능을 사용하기 위한 순차적인 방법을 나열해놓은 것
+  - 설명을 누르면 그 설명에 해당하는 기기화면을 보여준다.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- 기기 화면
 
-### `npm run eject`
+  - <img width="200" alt="스크린샷 2024-03-15 오후 8 22 40" src="https://github.com/Ellie998/digitalSSOG-next/assets/89681100/72040163-f919-4164-be37-43b14d6afd88">
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+  - 기능 설명에 해당하는 기기 화면이다.
+  - 실제 기기와 동일하게 동작한다.
+  - 기기 화면에서 타겟을 누르면 다음 설명 화면으로 넘어간다.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 제공 중인 기능
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- 기능 description 생성
+- description을 구성하는 method 생성
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### 사이트 구조
 
-## Learn More
+- figma url
+  : https://www.figma.com/file/jrvxebNsaFW70cd5t0F6PC/%EB%94%94%EC%A7%80%ED%84%B8%EC%8F%99-%EB%A6%AC%EB%89%B4%EC%96%BC?type=design&node-id=226%3A7142&mode=design&t=Le7YcObaVI0UjfjK-1
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- /admin/descriptions계열
+  ![admin:description](https://github.com/Ellie998/digitalssog-admin/assets/89681100/b8404cd3-9436-452b-8339-20bff951571a)
+  - /admin/descriptions
+  - /admin/descriptions/[functionName]
+  - /admin/descriptions/[functionName]/[appName]/[methodOrder]
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+    
+- /admin/guide/[guideId]
+  ![admin:guides: guideId](https://github.com/Ellie998/digitalssog-admin/assets/89681100/c900b173-c5c9-4ed7-919a-dbf7b4737f68)
+  
+- /admin/template 계열
+  ![template](https://github.com/Ellie998/digitalssog-admin/assets/89681100/1a8f0c21-f1e4-4039-b4a9-3e4d695327c6)  
+  - /admin/templates
+  - /admin/templates/[templateId]
+  
+- /admin/screen 계열
+  ![screen](https://github.com/
+  ![Element Form_ver1](https://github.com/Ellie998/digitalssog-admin/assets/89681100/52c49db8-5176-4cbb-bf94-3a66235c2647)
+Ellie998/digitalssog-admin/assets/89681100/9c79db4b-d04d-4f70-bf13-854b6ebccb2e)
+  
+### 추가하고 있는 기능
 
-### Code Splitting
+관리자 페이지에서 컨텐츠 생성을 효율적이고 빠르게 하는 방법에 대해 고민, 개선 중
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- 기기 화면과 관련된 데이터를 DB에 저장할 수 있도록 데이터 처리 방법과 데이터 생성 방법을 개선중이다.
+  - 프로토타입
+    - https://www.figma.com/file/jrvxebNsaFW70cd5t0F6PC/%EB%94%94%EC%A7%80%ED%84%B8%EC%8F%99-%EB%A6%AC%EB%89%B4%EC%96%BC?type=design&node-id=24%3A208&mode=design&t=Hy71PG75UCr9GWm9-1
+    - 기존
+      컴포넌트 하나하나 코드로 작성하여 구현
+    - 진행 중 (ver1~ver3)
+      기기 화면을 생성하는 form을 제공하여 편리하고 손쉽게 화면을 생성할 수 있도록 한다.
 
-### Analyzing the Bundle Size
+### 추가하고 싶은 기능
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+- /description/[functionName] 페이지에서 관리자는 해당 글 바로 수정/삭제 가능하도록 하는 기능
 
-### Making a Progressive Web App
+### 개선하고 싶은 부분
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+- 소스코드 크기 줄이기
+- 성능 개선
+- auth 부분 공부
 
-### Advanced Configuration
+## 프로젝트 구현
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### git flow
 
-### Deployment
+![git flow](https://github.com/Ellie998/digitalSSOG-next/assets/89681100/a39e8825-8ee2-4142-8eaf-445aa63e088f)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# digitalssog-admin
+- main
+  - 최종 배포를 위한 브랜치
+- hotfix
+  - main에서 급하게 수정해야 할 때 사용하는 브랜치
+- dev
+  - 자잘한 개선을 포함하는 브랜치
+- feature
+  - dev 브랜치로부터 나와, 새로운 기능을 개발, 개선하기 위한 브랜치
