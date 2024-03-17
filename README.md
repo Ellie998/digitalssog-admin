@@ -1,6 +1,11 @@
 ## 개요
-### url
+### URL 
 https://digitalssog-admin.vercel.app/
+- 사용자 버전
+    -  배포 URL
+      https://digitalssog.com
+    - Github URL
+      https://github.com/Ellie998/digitalssog-next
 
 ### 프로젝트 목적
 
