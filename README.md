@@ -44,8 +44,8 @@ https://digitalssog-admin.vercel.app/
 
 ## 기능
 ![기능설명체험영상](https://github.com/Ellie998/digitalssog-admin/assets/89681100/3bfc40b1-c0ad-4f3d-b2a2-15a459583609)
-1. 기능 설명 정보들을 만들기 위한 form을 제공한다.
-2. 기능 설명 정보의 동작을 직접 체험해볼 수 있는 기기 화면(preview)을 만들기 위한 form을 제공한다. 
+1. 기기를 사용하는 방법에 대한 정보들을 만들기 위한 form을 제공한다.
+2. 사용자가 기기의 화면과 동일한 미리보기 화면으로 기능을 직접 경험해보며 디지털 기기를 학습할 수 있는 화면(preview)을 만들기 위한 form을 제공한다. 
 
 ### 용어 정리
 
