@@ -67,7 +67,7 @@ https://digitalssog-admin.vercel.app/
 ### 사이트 구조
 
 - figma url
-  : https://www.figma.com/file/jrvxebNsaFW70cd5t0F6PC/%EB%94%94%EC%A7%80%ED%84%B8%EC%8F%99-%EB%A6%AC%EB%89%B4%EC%96%BC?type=design&node-id=226%3A7142&mode=design&t=Le7YcObaVI0UjfjK-1
+  https://www.figma.com/file/jrvxebNsaFW70cd5t0F6PC/%EB%94%94%EC%A7%80%ED%84%B8%EC%8F%99-%EB%A6%AC%EB%89%B4%EC%96%BC?type=design&node-id=225%3A2047&mode=design&t=zAGr94lwtvqc9ngU-1
 
 - /admin/descriptions계열
   ![admin:description](https://github.com/Ellie998/digitalssog-admin/assets/89681100/b8404cd3-9436-452b-8339-20bff951571a)
