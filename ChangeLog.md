@@ -16,7 +16,7 @@
 * template
 * screen
 
-## 0.0.2 (진핸 중)
+## 0.0.2 (진행 중)
 
 ### screen form (element, layout tab -> view tab)
 
