@@ -1,11 +1,14 @@
 ## 개요
 ### URL 
 https://digitalssog-admin.vercel.app/
-- 사용자 버전
-    -  배포 URL
-      https://digitalssog.com
-    - Github URL
-      https://github.com/Ellie998/digitalssog-next
+ 
+
+> 사용자 버전 디지털쏙 배포 URL : https://digitalssog.com
+> 
+> 사용자 버전 디지털쏙 Github URL : https://github.com/Ellie998/digitalssog-next
+
+### 기간
+24.01.17 ~ 진행 중
 
 ### 프로젝트 목적
 
