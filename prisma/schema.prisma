@@ -1,5 +1,5 @@
 datasource db {
-  provider     = "mysql"
+  provider     = "postgresql"
   url          = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
   relationMode = "prisma"
@@ -132,7 +132,7 @@ model Screen {
 	id String @id @default(uuid()) @unique
 	name String?
 	bgColor String? 
-	elements String? @db.LongText
+	elements String? @db.Text
 
 
 	guide_components Guide_component[]
